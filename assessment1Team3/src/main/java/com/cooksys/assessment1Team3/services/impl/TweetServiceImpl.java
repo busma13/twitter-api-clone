@@ -1,6 +1,7 @@
 package com.cooksys.assessment1Team3.services.impl;
 
-import com.cooksys.assessment1Team3.dto.TweetResponseDto;
+import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
+import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.mappers.TweetMapper;
 import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import com.cooksys.assessment1Team3.services.TweetService;
@@ -18,5 +19,10 @@ public class TweetServiceImpl implements TweetService {
     public TweetResponseDto getAllTweets() {
 
         return tweetMapper.entityToResponseDto(tweetRepository.findAllByDeletedFalse());
+    }
+
+    @Override
+    public TweetResponseDto createTweet(TweetRequestDto tweetRequestDto) {
+        return null;
     }
 }
