@@ -1,5 +1,7 @@
 package com.cooksys.assessment1Team3.entities;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -27,10 +29,10 @@ public class Hashtag {
 
 	@Column(nullable = false)
 	@Setter(AccessLevel.NONE)
-	private LocalDateTime firstUsed;
+	private Timestamp firstUsed = Timestamp.valueOf(LocalDateTime.now());;
 
 	@Column(nullable = false)
-	private LocalDateTime lastUsed;
+	private Timestamp lastUsed;
 
 	@ManyToMany(mappedBy = "hashtags")
 	private Set<Tweet> tweets;
