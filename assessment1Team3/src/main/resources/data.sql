@@ -1,0 +1,2 @@
+--INSERT INTO tweets (posted, deleted, content, in_reply_to, repost_of)
+--VALUES (CURRENT_TIMESTAMP, false, "First tweet!", null, null);
