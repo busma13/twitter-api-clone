@@ -8,4 +8,5 @@ import com.cooksys.assessment1Team3.entities.User;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 	UserResponseDto entityToDto(User entity);
+	
 }
