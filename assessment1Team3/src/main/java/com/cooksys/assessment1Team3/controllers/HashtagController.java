@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cooksys.assessment1Team3.entities.Hashtag;
-import com.cooksys.assessment1Team3.entities.Tweet;
+import com.cooksys.assessment1Team3.dtos.HashtagDto;
+import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.service.HashtagService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,11 +19,11 @@ public class HashtagController {
 
 	private final HashtagService hashtagService;
 
-	public List<Hashtag> getAllHashtags() {
+	public List<HashtagDto> getAllHashtags() {
 		return hashtagService.getAllHashtags();
 	}
 
-	public List<Tweet> getTweetsByHashtag(@PathVariable String label) {
+	public List<TweetResponseDto> getTweetsByHashtag(@PathVariable String label) {
 		return hashtagService.getTweetsByHashtag();
 	}
 
