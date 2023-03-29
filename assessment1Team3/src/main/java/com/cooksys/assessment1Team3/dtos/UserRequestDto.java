@@ -1,15 +1,11 @@
 package com.cooksys.assessment1Team3.dtos;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor
-@Data
-public class UserResponseDto {
+public class UserRequestDto {
 	private String password;
 	private String phone;
 	private boolean deleted;

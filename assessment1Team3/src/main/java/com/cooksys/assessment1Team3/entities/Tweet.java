@@ -43,7 +43,7 @@ public class Tweet {
 
     @ManyToMany
     @JoinTable
-    private List<User> likes;
+    private List<User> likedUsers;
 
     @ManyToMany
     @JoinTable
