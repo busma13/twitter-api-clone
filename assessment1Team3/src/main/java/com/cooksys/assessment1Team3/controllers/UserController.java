@@ -3,12 +3,11 @@ package com.cooksys.assessment1Team3.controllers;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
-import com.cooksys.assessment1Team3.service.UserService;
+import com.cooksys.assessment1Team3.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 

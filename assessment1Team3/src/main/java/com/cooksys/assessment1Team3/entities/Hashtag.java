@@ -28,7 +28,7 @@ public class Hashtag {
 
 	@Column(nullable = false)
 	@Setter(AccessLevel.NONE)
-	private Timestamp firstUsed = Timestamp.valueOf(LocalDateTime.now());;
+	private Timestamp firstUsed = Timestamp.valueOf(LocalDateTime.now());
 
 	@Column(nullable = false)
 	private Timestamp lastUsed;

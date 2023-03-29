@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cooksys.assessment1Team3.dtos.HashtagDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
-import com.cooksys.assessment1Team3.service.HashtagService;
+import com.cooksys.assessment1Team3.services.HashtagService;
 
 import lombok.RequiredArgsConstructor;
 

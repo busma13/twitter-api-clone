@@ -3,6 +3,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import jakarta.persistence.ManyToMany;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Entity;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Table(name = "user_table")
 public class User {
+
 	private String password;
 	private String phone;
 	private boolean deleted;

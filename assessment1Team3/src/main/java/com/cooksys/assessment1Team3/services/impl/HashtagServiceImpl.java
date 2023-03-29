@@ -1,4 +1,4 @@
-package com.cooksys.assessment1Team3.service.impl;
+package com.cooksys.assessment1Team3.services.impl;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import com.cooksys.assessment1Team3.dtos.HashtagDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.mappers.HashtagMapper;
 import com.cooksys.assessment1Team3.repositories.HashtagRepository;
-import com.cooksys.assessment1Team3.service.HashtagService;
+import com.cooksys.assessment1Team3.services.HashtagService;
 
 import lombok.RequiredArgsConstructor;
 
