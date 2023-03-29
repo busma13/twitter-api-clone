@@ -1,7 +1,7 @@
 package com.cooksys.assessment1Team3.entities;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.ManyToMany;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,29 +9,46 @@ import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
 @Data
+@Table(name = "user_table")
 public class User {
 
-	@Id
-	@GeneratedValue
-	private Long id;
-	private String username;
 	private String password;
-	@CreationTimestamp
-	private Timestamp joined = Timestamp.valueOf(LocalDateTime.now());
+	private String phone;
 	private boolean deleted;
 	private String firstName;
 	private String lastName;
 	private String email;
-	private String phone;
-	@ManyToMany(mappedBy = "mentionedUsers")
-	private List<Tweet> mentions;
+	private String userName;
+	
+	@CreationTimestamp
+	private Timestamp joined = Timestamp.valueOf(LocalDateTime.now());
+	
+	@Id
+	@GeneratedValue
+	private Long id;
+	
 	@ManyToMany(mappedBy = "likes")
-	private List<Tweet> likes;
-
+	private Set<Tweet> likedTweets;
+	
+	@ManyToMany(mappedBy = "mentionedUsers")
+	private Set<Tweet> mentionedTweets;
+	
+	@ManyToMany
+	@JoinTable
+	private Set<User> followers;
+	
+	@ManyToMany(mappedBy = "followers")
+	private Set<User> following;
+	
 }

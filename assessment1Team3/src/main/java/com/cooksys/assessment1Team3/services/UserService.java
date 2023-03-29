@@ -1,7 +1,5 @@
 package com.cooksys.assessment1Team3.services;
 
-import java.util.List;
-
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 
 public interface UserService {
