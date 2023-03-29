@@ -1,5 +1,7 @@
 package com.cooksys.assessment1Team3.controllers;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,16 +20,16 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final UserService userService;
 	
-	@GetMapping
-	public UserResponseDto getUser(Long id) {
+	@GetMapping("/{id}")
+	public UserResponseDto getUser(@PathVariable Long id) {
 		return userService.getUser(id);
 	}
 	
-//	THIS GOES IN VALIDATE CONTROLLER
-//	@GetMapping("validate/username/exists/@{username}")
-//	public UserResponseDto validateUser(Long id) {
-//		return userService.validateUser(id);
-//	}
+	@GetMapping
+	public List<UserResponseDto> getUsers() {
+		return userService.getUsers();
+	}
+	
 	
 	// Use @PathVariable for data received in path. Arguments should be re-evaluated
 	@PatchMapping("/@{username}")
@@ -42,11 +44,6 @@ public class UserController {
 	}
 	
 	
-//	THIS GOES IN TWEET CONTROLLER
-//	@GetMapping("tweets/{id}/context")
-//	public UserResponseDto getTweet(Long id) {
-//		return userService.getTweet(id);
-//	}
 	
 	@GetMapping("/@{username}/tweets")
 	public UserResponseDto getUserTweets(Long id) {

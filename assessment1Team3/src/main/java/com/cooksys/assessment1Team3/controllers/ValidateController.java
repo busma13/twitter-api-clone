@@ -10,5 +10,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/validate")
 public class ValidateController {
+	
+	
+//	THIS GOES IN VALIDATE CONTROLLER
+//	@GetMapping("validate/username/exists/@{username}")
+//	public UserResponseDto validateUser(Long id) {
+//		return userService.validateUser(id);
+//	}
 
 }

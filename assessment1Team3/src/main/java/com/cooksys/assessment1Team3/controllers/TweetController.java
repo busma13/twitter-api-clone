@@ -28,4 +28,11 @@ public class TweetController {
     public TweetResponseDto createTweet(@RequestBody TweetRequestDto tweetRequestDto) {
         return tweetService.createTweet(tweetRequestDto);
     }
+    
+
+//	THIS GOES IN TWEET CONTROLLER
+//	@GetMapping("tweets/{id}/context")
+//	public UserResponseDto getTweet(Long id) {
+//		return userService.getTweet(id);
+//	}
 }

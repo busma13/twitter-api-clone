@@ -1,5 +1,7 @@
 package com.cooksys.assessment1Team3.services;
 
+import java.util.List;
+
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 
 public interface UserService {
@@ -14,4 +16,6 @@ public interface UserService {
 	UserResponseDto getUserTweets(Long id);
 
 	UserResponseDto getTweet(Long id);
+
+	List<UserResponseDto> getUsers();
 }
