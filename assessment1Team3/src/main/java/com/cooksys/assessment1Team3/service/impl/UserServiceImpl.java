@@ -1,10 +1,15 @@
 package com.cooksys.assessment1Team3.service.impl;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
+
+@Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
 	@Override
