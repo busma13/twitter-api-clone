@@ -31,7 +31,7 @@ public class User {
 	private String phone;
 	@ManyToMany(mappedBy = "mentionedUsers")
 	private List<Tweet> mentions;
-	@ManyToMany(mappedBy = "likedUsers")
+	@ManyToMany(mappedBy = "likes")
 	private List<Tweet> likes;
 
 }
