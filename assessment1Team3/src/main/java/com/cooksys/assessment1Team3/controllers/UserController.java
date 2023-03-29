@@ -1,5 +1,7 @@
 package com.cooksys.assessment1Team3.controllers;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.services.UserService;
 
@@ -18,16 +21,16 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final UserService userService;
 	
-	@GetMapping
-	public UserResponseDto getUser(Long id) {
-		return userService.getUser(id);
+	@GetMapping("/{username}")
+	public UserResponseDto getUser(@PathVariable String username) {
+		return userService.getUser(username);
 	}
 	
-//	THIS GOES IN VALIDATE CONTROLLER
-//	@GetMapping("validate/username/exists/@{username}")
-//	public UserResponseDto validateUser(Long id) {
-//		return userService.validateUser(id);
-//	}
+	@GetMapping
+	public List<UserResponseDto> getUsers() {
+		return userService.getUsers();
+	}
+	
 	
 	// Use @PathVariable for data received in path. Arguments should be re-evaluated
 	@PatchMapping("/@{username}")
@@ -41,16 +44,13 @@ public class UserController {
 		return userService.deleteUser(id);
 	}
 	
-	
-//	THIS GOES IN TWEET CONTROLLER
-//	@GetMapping("tweets/{id}/context")
-//	public UserResponseDto getTweet(Long id) {
-//		return userService.getTweet(id);
-//	}
-	
 	@GetMapping("/@{username}/tweets")
 	public UserResponseDto getUserTweets(Long id) {
 		return userService.getUserTweets(id);
 	}
 
+	@GetMapping("/@{username}/feed")
+	public List<TweetResponseDto> getUserFeed(@PathVariable String username) {
+		return userService.getUserFeed(username);
+	}
 }
