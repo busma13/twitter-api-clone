@@ -13,4 +13,5 @@ public class UserResponseDto {
 	private String username;
     private ProfileDto profile;
     private Timestamp joined;
+    private boolean deleted;
 }

@@ -1,4 +1,10 @@
 package com.cooksys.assessment1Team3.services;
 
-public class ValidateService {
+public interface ValidateService {
+	
+	boolean validateUserExists(String username);
+
+	boolean validateUserAvailable(String username);
+	
+	boolean validateTagExists(String label);
 }

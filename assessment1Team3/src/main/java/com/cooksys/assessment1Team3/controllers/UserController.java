@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.services.UserService;
 
@@ -20,9 +21,9 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final UserService userService;
 	
-	@GetMapping("/{id}")
-	public UserResponseDto getUser(@PathVariable Long id) {
-		return userService.getUser(id);
+	@GetMapping("/{username}")
+	public UserResponseDto getUser(@PathVariable String username) {
+		return userService.getUser(username);
 	}
 	
 	@GetMapping
@@ -43,11 +44,13 @@ public class UserController {
 		return userService.deleteUser(id);
 	}
 	
-	
-	
 	@GetMapping("/@{username}/tweets")
 	public UserResponseDto getUserTweets(Long id) {
 		return userService.getUserTweets(id);
 	}
 
+	@GetMapping("/@{username}/feed")
+	public List<TweetResponseDto> getUserFeed(@PathVariable String username) {
+		return userService.getUserFeed(username);
+	}
 }
