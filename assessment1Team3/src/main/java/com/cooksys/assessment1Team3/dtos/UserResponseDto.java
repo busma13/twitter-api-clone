@@ -10,15 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class UserResponseDto {
-	private String password;
-	private String phone;
-	private boolean deleted;
-	private String firstName;
-	private String lastName;
-	private String userName;
-	private String email;
-	private Long id;
-	
-	@CreationTimestamp
-    private Timestamp posted = Timestamp.valueOf(LocalDateTime.now());
+	private String username;
+    private ProfileDto profile;
+    private Timestamp joined;
 }

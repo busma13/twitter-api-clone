@@ -13,7 +13,7 @@ import com.cooksys.assessment1Team3.services.HashtagService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("tags")
+@RequestMapping("/tags")
 @RequiredArgsConstructor
 public class HashtagController {
 

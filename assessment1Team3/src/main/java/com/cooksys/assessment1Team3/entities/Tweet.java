@@ -10,43 +10,59 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "tweets")
 @NoArgsConstructor
 @Data
 public class Tweet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue
+    // Changed to Long data type 
+    private Long id;
 
     @ManyToOne
     private User author;
 
     @CreationTimestamp
-    private Timestamp posted = Timestamp.valueOf(LocalDateTime.now());
+    private Timestamp posted;
 
-    private boolean deleted;
+    //Set default value of deleted to false
+    private boolean deleted = false;
 
     private String content;
 
+    //Removed Join
     @ManyToOne
-    @JoinColumn(name = "reply_id")
     private Tweet inReplyTo;
+    
+    //Added relational mapping between singular Tweet and replies to it.
+    @OneToMany(mappedBy="inReplyTo")
+    private List<Tweet> replies;
 
     @ManyToOne
-    @JoinColumn(name = "repost_id")
     private Tweet repostOf;
+    
+    //Added relational mapping between singular Tweet and reposts of it.
+    @OneToMany(mappedBy="repostOf")
+    private List<Tweet> reposts;
 
-    @ManyToMany
-    @JoinTable
+    //Added explicit joins for Tweets and Hashtags
+    @ManyToMany(cascade=CascadeType.MERGE)
+    @JoinTable(
+    		name="tweet_hashtags",
+    		joinColumns=@JoinColumn(name="tweet_id"),
+    		inverseJoinColumns=@JoinColumn(name="hashtag_id")
+    		)
     private List<Hashtag> hashtags;
 
-    @ManyToMany
-    @JoinTable
+    @ManyToMany(mappedBy="likedTweets")
     private List<User> likes;
 
     @ManyToMany
-    @JoinTable
+    @JoinTable(
+    		name="user_mentions",
+    	    joinColumns=@JoinColumn(name="tweet_id"),
+    	    inverseJoinColumns=@JoinColumn(name="user_id")
+    		)
     private List<User> mentionedUsers;
 
 }

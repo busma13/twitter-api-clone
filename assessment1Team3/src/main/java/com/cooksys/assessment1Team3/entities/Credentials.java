@@ -1,5 +1,6 @@
 package com.cooksys.assessment1Team3.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class Credentials {
-	private String password;
-	private String username;
-	private String email;
-	private String phone;
+	
+	 	@Column(nullable = false, unique = true)
+	    private String username;
+
+	    @Column(nullable = false)
+	    private String password;
+
 }

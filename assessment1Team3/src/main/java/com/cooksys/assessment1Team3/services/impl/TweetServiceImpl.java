@@ -18,7 +18,7 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public TweetResponseDto getAllTweets() {
 
-        return tweetMapper.entityToResponseDto(tweetRepository.findAllByDeletedFalse());
+        return tweetMapper.entityToDto(tweetRepository.findAllByDeletedFalse());
     }
 
     @Override
