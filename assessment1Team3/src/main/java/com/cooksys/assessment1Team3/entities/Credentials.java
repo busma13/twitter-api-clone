@@ -1,13 +1,13 @@
-package com.cooksys.assessment1Team3.dtos;
+package com.cooksys.assessment1Team3.entities;
 
-import java.sql.Timestamp;
-
+import jakarta.persistence.Embeddable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Embeddable
 @NoArgsConstructor
 @Data
-public class CredentialsDto {
+public class Credentials {
 	private String password;
 	private String username;
 	private String email;
