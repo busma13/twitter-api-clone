@@ -20,10 +20,6 @@ public class User {
 	
 	// Embedded Credentials and Profile
 	@Embedded
-//	@AttributeOverrides({
-//			@AttributeOverride(name = "username", column = @Column(name = "username")),
-//			@AttributeOverride(name = "password", column = @Column(name = "password")),
-//	})
 	private Credentials credentials;
 	
 	@Embedded

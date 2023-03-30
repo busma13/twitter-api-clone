@@ -1,7 +1,6 @@
 package com.cooksys.assessment1Team3.services.impl;
 
 import com.cooksys.assessment1Team3.entities.User;
-import com.cooksys.assessment1Team3.exceptions.NotFoundException;
 import com.cooksys.assessment1Team3.repositories.UserRepository;
 import com.cooksys.assessment1Team3.services.ValidateService;
 import lombok.RequiredArgsConstructor;
