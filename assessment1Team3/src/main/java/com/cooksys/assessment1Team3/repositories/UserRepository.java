@@ -12,6 +12,10 @@ import com.cooksys.assessment1Team3.entities.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	List<User> findAllByDeletedFalse();
+	
+	Optional<User> findByCredentialsUsernameAndDeletedFalse(String username);
+
+    Optional<User> findByCredentialsUsername(String username);
 
     Optional<User> findByCredentialsUsernameAndDeletedFalse(String username);
 
