@@ -1,11 +1,14 @@
 package com.cooksys.assessment1Team3.services.impl;
 
+import com.cooksys.assessment1Team3.dtos.CredentialsDto;
 import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.entities.Tweet;
+import com.cooksys.assessment1Team3.entities.User;
 import com.cooksys.assessment1Team3.exceptions.NotFoundException;
 import com.cooksys.assessment1Team3.mappers.TweetMapper;
 import com.cooksys.assessment1Team3.repositories.TweetRepository;
+import com.cooksys.assessment1Team3.repositories.UserRepository;
 import com.cooksys.assessment1Team3.services.TweetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ public class TweetServiceImpl implements TweetService {
 
     private final TweetRepository tweetRepository;
     private final TweetMapper tweetMapper;
+    private final UserRepository userRepository;
 
     @Override
     public List<TweetResponseDto> getAllTweets() {
@@ -34,7 +38,14 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public TweetResponseDto createTweet(TweetRequestDto tweetRequestDto) {
-        return null;
+
+        String username = tweetRequestDto.getCredentials().getUsername();
+        Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
+        Tweet tweetToSave = new Tweet();
+        tweetToSave.setAuthor(optionalUser.get());
+        tweetToSave.setContent(tweetToSave.getContent());
+
+        return tweetMapper.entityToDto(tweetToSave);
     }
 
     @Override
@@ -55,6 +66,22 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
+    public void addLikeToTweet(Long id, CredentialsDto credentials) {
+        Tweet tweetToBeLiked = getTweet(id);
+        String username = credentials.getUsername();
+        Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
+
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("User with username of " + username + " was not found in our database.");
+        } else {
+            tweetToBeLiked.getLikes().add(optionalUser.get());
+            optionalUser.get().getLikedTweets().add(tweetToBeLiked);
+
+            tweetRepository.saveAndFlush(tweetToBeLiked);
+            userRepository.saveAndFlush(optionalUser.get());
+        }
+    }
+
     public List<TweetResponseDto> getUserTweets(String username) {
         // TODO Auto-generated method stub
         return null;

@@ -1,9 +1,11 @@
 package com.cooksys.assessment1Team3.controllers;
 
+import com.cooksys.assessment1Team3.dtos.CredentialsDto;
 import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.services.TweetService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +30,12 @@ public class TweetController {
     @PostMapping
     public TweetResponseDto createTweet(@RequestBody TweetRequestDto tweetRequestDto) {
         return tweetService.createTweet(tweetRequestDto);
+    }
+
+    @PostMapping("/{id}/like")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addLikeToTweet(@PathVariable(name = "id") Long id, @RequestBody CredentialsDto credentials) {
+        tweetService.addLikeToTweet(id, credentials);
     }
 
     @GetMapping("/@{username}/tweets")
