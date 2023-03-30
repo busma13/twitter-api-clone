@@ -13,13 +13,9 @@ public interface UserService {
 
 	UserResponseDto getUserByUsername(String username);
 
-	UserResponseDto modifyUser(long id);
+	UserResponseDto modifyUser(String username, UserRequestDto body);
 
-	UserResponseDto deleteUser(long id);
-
-	UserResponseDto getUserTweets(Long id);
-
-	UserResponseDto getTweet(Long id);
+	UserResponseDto deleteUser(String username);
 
 	List<UserResponseDto> getUsers();
 

@@ -2,6 +2,7 @@ package com.cooksys.assessment1Team3.services.impl;
 
 import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
+import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.exceptions.NotFoundException;
 import com.cooksys.assessment1Team3.mappers.TweetMapper;
@@ -53,4 +54,10 @@ public class TweetServiceImpl implements TweetService {
 
         return tweetMapper.entityToDto(getTweet(id));
     }
+
+	@Override
+	public List<TweetResponseDto> getUserTweets(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

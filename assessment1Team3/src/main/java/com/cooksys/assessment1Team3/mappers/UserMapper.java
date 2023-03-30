@@ -6,6 +6,7 @@ import org.mapstruct.Mapping;
 
 import com.cooksys.assessment1Team3.dtos.UserRequestDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
+import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.entities.User;
 
 @Mapper(componentModel = "spring", uses = {ProfileMapper.class, CredentialsMapper.class})
