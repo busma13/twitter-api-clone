@@ -12,7 +12,7 @@ public class Profile {
     private String firstName;
     private String lastName;
     private String phone;
-    
+
     // Make email non-null
     @Column(nullable = false)
     private String email;

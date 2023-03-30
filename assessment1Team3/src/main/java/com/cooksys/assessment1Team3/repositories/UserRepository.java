@@ -1,12 +1,11 @@
 package com.cooksys.assessment1Team3.repositories;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.cooksys.assessment1Team3.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.cooksys.assessment1Team3.entities.User;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

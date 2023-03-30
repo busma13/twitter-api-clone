@@ -32,14 +32,14 @@ public class Tweet {
     //Removed Join
     @ManyToOne
     private Tweet inReplyTo;
-    
+
     //Added relational mapping between singular Tweet and replies to it.
     @OneToMany(mappedBy="inReplyTo")
     private List<Tweet> replies;
 
     @ManyToOne
     private Tweet repostOf;
-    
+
     //Added relational mapping between singular Tweet and reposts of it.
     @OneToMany(mappedBy="repostOf")
     private List<Tweet> reposts;
@@ -47,10 +47,10 @@ public class Tweet {
     //Added explicit joins for Tweets and Hashtags
     @ManyToMany(cascade=CascadeType.MERGE)
     @JoinTable(
-    		name="tweet_hashtags",
-    		joinColumns=@JoinColumn(name="tweet_id"),
-    		inverseJoinColumns=@JoinColumn(name="hashtag_id")
-    		)
+            name="tweet_hashtags",
+            joinColumns=@JoinColumn(name="tweet_id"),
+            inverseJoinColumns=@JoinColumn(name="hashtag_id")
+    )
     private List<Hashtag> hashtags;
 
     @ManyToMany(mappedBy="likedTweets")
@@ -58,10 +58,10 @@ public class Tweet {
 
     @ManyToMany
     @JoinTable(
-    		name="user_mentions",
-    	    joinColumns=@JoinColumn(name="tweet_id"),
-    	    inverseJoinColumns=@JoinColumn(name="user_id")
-    		)
+            name="user_mentions",
+            joinColumns=@JoinColumn(name="tweet_id"),
+            inverseJoinColumns=@JoinColumn(name="user_id")
+    )
     private List<User> mentionedUsers;
 
 }

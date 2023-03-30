@@ -2,7 +2,6 @@ package com.cooksys.assessment1Team3.services;
 
 import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
-import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.entities.Tweet;
 
 import java.util.List;

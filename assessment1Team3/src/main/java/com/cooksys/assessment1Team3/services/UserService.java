@@ -1,11 +1,11 @@
 package com.cooksys.assessment1Team3.services;
 
-import java.util.List;
-
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.dtos.UserRequestDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.entities.User;
+
+import java.util.List;
 
 public interface UserService {
 

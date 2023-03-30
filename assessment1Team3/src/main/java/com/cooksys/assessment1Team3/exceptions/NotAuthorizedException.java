@@ -8,9 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NotAuthorizedException extends RuntimeException{
-	
+
 	private static final long serialVersionUID = 7834465387690995370L;
-	
+
 	private String message;
 
 }

@@ -1,16 +1,14 @@
 package com.cooksys.assessment1Team3.services.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.cooksys.assessment1Team3.dtos.HashtagDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.mappers.HashtagMapper;
 import com.cooksys.assessment1Team3.repositories.HashtagRepository;
 import com.cooksys.assessment1Team3.services.HashtagService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

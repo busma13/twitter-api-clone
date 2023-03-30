@@ -1,46 +1,36 @@
 package com.cooksys.assessment1Team3.controllers;
 
-import java.util.List;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.cooksys.assessment1Team3.dtos.UserRequestDto;
-import org.springframework.web.bind.annotation.*;
-
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.dtos.UserRequestDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.services.UserService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 	private final UserService userService;
-	
+
 	@GetMapping("/@{username}")
 	public UserResponseDto getUserByUsername(@PathVariable String username) {
 		System.out.println("Testing");
 		return userService.getUserByUsername(username);
 	}
-	
+
 	@GetMapping
 	public List<UserResponseDto> getUsers() {
 		return userService.getUsers();
 	}
-  
+
 	@PatchMapping("/@{username}")
 	public UserResponseDto modifyUser(@PathVariable String username, @RequestBody UserRequestDto body) {
 		return userService.modifyUser(username, body);
 	}
-	
+
 	@DeleteMapping("/@{username}")
 	public UserResponseDto deleteUser(@PathVariable String username) {
 		return  userService.deleteUser(username);

@@ -1,33 +1,30 @@
 package com.cooksys.assessment1Team3.services.impl;
 
+import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
+import com.cooksys.assessment1Team3.dtos.UserRequestDto;
+import com.cooksys.assessment1Team3.dtos.UserResponseDto;
+import com.cooksys.assessment1Team3.entities.Profile;
+import com.cooksys.assessment1Team3.entities.Tweet;
+import com.cooksys.assessment1Team3.entities.User;
+import com.cooksys.assessment1Team3.exceptions.BadRequestException;
+import com.cooksys.assessment1Team3.exceptions.NotFoundException;
+import com.cooksys.assessment1Team3.exceptions.UserAlreadyExistException;
+import com.cooksys.assessment1Team3.mappers.ProfileMapper;
+import com.cooksys.assessment1Team3.mappers.TweetMapper;
+import com.cooksys.assessment1Team3.mappers.UserMapper;
+import com.cooksys.assessment1Team3.repositories.TweetRepository;
+import com.cooksys.assessment1Team3.repositories.UserRepository;
+import com.cooksys.assessment1Team3.services.TweetService;
+import com.cooksys.assessment1Team3.services.UserService;
+import com.cooksys.assessment1Team3.services.ValidateService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.cooksys.assessment1Team3.entities.Credentials;
-import com.cooksys.assessment1Team3.entities.Tweet;
-import com.cooksys.assessment1Team3.exceptions.BadRequestException;
-import com.cooksys.assessment1Team3.exceptions.UserAlreadyExistException;
-import com.cooksys.assessment1Team3.mappers.TweetMapper;
-import com.cooksys.assessment1Team3.repositories.TweetRepository;
-import org.springframework.stereotype.Service;
-
-import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
-import com.cooksys.assessment1Team3.dtos.UserRequestDto;
-import com.cooksys.assessment1Team3.dtos.UserResponseDto;
-import com.cooksys.assessment1Team3.entities.Profile;
-import com.cooksys.assessment1Team3.entities.User;
-import com.cooksys.assessment1Team3.exceptions.NotFoundException;
-import com.cooksys.assessment1Team3.mappers.ProfileMapper;
-import com.cooksys.assessment1Team3.mappers.UserMapper;
-import com.cooksys.assessment1Team3.repositories.UserRepository;
-import com.cooksys.assessment1Team3.services.TweetService;
-import com.cooksys.assessment1Team3.services.UserService;
-import com.cooksys.assessment1Team3.services.ValidateService;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +32,9 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
-  
 	private final TweetMapper tweetMapper;
-  private final TweetRepository tweetRepository;
-  private final TweetService tweetService;
-  
+	private final TweetRepository tweetRepository;
+	private final TweetService tweetService;
 	private final ValidateService validateService;
 	private final ProfileMapper profileMapper;
 
