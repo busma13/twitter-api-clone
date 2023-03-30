@@ -1,7 +1,9 @@
 package com.cooksys.assessment1Team3.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.cooksys.assessment1Team3.entities.User;
 import org.springframework.stereotype.Service;
 
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
@@ -23,8 +25,19 @@ public class UserServiceImpl implements UserService {
 	private final ValidateService validateService;
 
 	@Override
-	public UserResponseDto getUser(String username) {
+	public User getUser(String username) {
+		Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
+
+		if (optionalUser.isEmpty()) {
+			throw new NotFoundException("User with username of "
+					+ username + " does not exist in our database.");
+		}
 		// TODO Auto-generated method stub
+		return optionalUser.get();
+	}
+
+	@Override
+	public UserResponseDto getUserByUsername(String username) {
 		return null;
 	}
 
@@ -63,6 +76,29 @@ public class UserServiceImpl implements UserService {
 			throw new NotFoundException("There is no user with name " + username);
 		}
 		return null;
+	}
+
+	@Override
+	public List<UserResponseDto> getUserFollowing(String username) {
+		User user = getUser(username);
+
+		if (user.getFollowing() == null || user.getFollowing().isEmpty()) {
+			throw new NotFoundException("User with username of "
+					+ username + " does not have any following.");
+		}
+		return userMapper.entitiesToDtos(user.getFollowing());
+	}
+
+	@Override
+	public List<UserResponseDto> getUserFollowers(String username) {
+		User user = getUser(username);
+
+		if (user.getFollowers() == null || user.getFollowers().isEmpty()) {
+			throw new NotFoundException("User with username of "
+					+ username + " does not have any followers.");
+		}
+
+		return userMapper.entitiesToDtos(user.getFollowers());
 	}
 
 }
