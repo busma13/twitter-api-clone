@@ -12,8 +12,6 @@ import java.util.Optional;
 public class ValidateServiceImpl implements ValidateService {
 	private final UserRepository userRepository;
 
-	private final UserRepository userRepository;
-
 	@Override
 	public boolean validateUserExists(String username) {
 		Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);

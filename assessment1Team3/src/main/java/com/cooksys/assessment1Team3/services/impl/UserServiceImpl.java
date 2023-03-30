@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
-import com.cooksys.assessment1Team3.entities.User;
 import com.cooksys.assessment1Team3.exceptions.NotFoundException;
 import com.cooksys.assessment1Team3.mappers.UserMapper;
 import com.cooksys.assessment1Team3.repositories.UserRepository;
@@ -93,29 +92,6 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 	
-	@Override
-	public List<UserResponseDto> getUserFollowing(String username) {
-		User user = getUser(username);
-
-		if (user.getFollowing() == null || user.getFollowing().isEmpty()) {
-			throw new NotFoundException("User with username of "
-					+ username + " does not have any following.");
-		}
-		return userMapper.entitiesToDtos(user.getFollowing());
-	}
-
-	@Override
-	public List<UserResponseDto> getUserFollowers(String username) {
-		User user = getUser(username);
-
-		if (user.getFollowers() == null || user.getFollowers().isEmpty()) {
-			throw new NotFoundException("User with username of "
-					+ username + " does not have any followers.");
-		}
-
-		return userMapper.entitiesToDtos(user.getFollowers());
-	}
-
 	@Override
 	public List<UserResponseDto> getUserFollowing(String username) {
 		User user = getUser(username);
