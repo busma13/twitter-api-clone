@@ -1,5 +1,6 @@
 package com.cooksys.assessment1Team3.controllers.advice;
 
+import com.cooksys.assessment1Team3.exceptions.UserAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,6 +32,12 @@ public class Assessment1Team3ControllerAdvice {
 	@ExceptionHandler(NotFoundException.class)
 	public ErrorDto handleNotFoundException(NotFoundException notFoundException) {
 		return new ErrorDto(notFoundException.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(UserAlreadyExistException.class)
+	public ErrorDto handleUserAlreadyExistException(UserAlreadyExistException userAlreadyExistException) {
+		return new ErrorDto(userAlreadyExistException.getMessage());
 	}
 
 	
