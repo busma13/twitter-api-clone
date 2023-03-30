@@ -23,7 +23,7 @@ public class UserController {
 	
 	@GetMapping("/{username}")
 	public UserResponseDto getUser(@PathVariable String username) {
-		return userService.getUser(username);
+		return userService.getUserByUsername(username);
 	}
 	
 	@GetMapping
@@ -52,5 +52,15 @@ public class UserController {
 	@GetMapping("/@{username}/feed")
 	public List<TweetResponseDto> getUserFeed(@PathVariable String username) {
 		return userService.getUserFeed(username);
+	}
+	
+	@GetMapping("/@{username}/following")
+	public List<UserResponseDto> getUserFollowing(@PathVariable String username) {
+		return userService.getUserFollowing(username);
+	}
+
+	@GetMapping("@{username}/followers")
+	public List<UserResponseDto> getUserFollowers(@PathVariable String username) {
+		return userService.getUserFollowers(username);
 	}
 }
