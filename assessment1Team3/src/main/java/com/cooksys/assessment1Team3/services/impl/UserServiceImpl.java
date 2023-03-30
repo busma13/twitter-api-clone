@@ -6,8 +6,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.cooksys.assessment1Team3.dtos.UserRequestDto;
+import com.cooksys.assessment1Team3.entities.Credentials;
+import com.cooksys.assessment1Team3.entities.Profile;
 import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.entities.User;
+import com.cooksys.assessment1Team3.exceptions.BadRequestException;
+import com.cooksys.assessment1Team3.exceptions.UserAlreadyExistException;
 import com.cooksys.assessment1Team3.mappers.TweetMapper;
 import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import org.springframework.stereotype.Service;
@@ -31,6 +36,17 @@ public class UserServiceImpl implements UserService {
 	private final TweetMapper tweetMapper;
 	private final ValidateService validateService;
 	private final TweetRepository tweetRepository;
+
+	private void validateUserRequest(UserRequestDto userRequestDto) {
+		if (userRequestDto.getCredentials().getUsername() == null ||
+				userRequestDto.getCredentials().getPassword() == null ||
+				userRequestDto.getProfile().getFirstName() == null ||
+				userRequestDto.getProfile().getLastName() == null ||
+				userRequestDto.getProfile().getEmail() == null ||
+				userRequestDto.getProfile().getPhone() == null) {
+			throw new BadRequestException("You must provide all the required fileds for the request.");
+		}
+	}
 
 	@Override
 	public User getUser(String username) {
@@ -138,6 +154,25 @@ public class UserServiceImpl implements UserService {
 		Collections.sort(tweets, Comparator.comparing(Tweet::getPosted).reversed());
 
 		return tweetMapper.entitiesToResponseDtos(tweets);
+	}
+
+	@Override
+	public UserResponseDto createUser(UserRequestDto userRequest) {
+		validateUserRequest(userRequest);
+		String username = userRequest.getCredentials().getUsername();
+		Optional<User> user = userRepository.findByCredentialsUsername(username);
+		if (user.isPresent()) {
+			if (user.get().isDeleted() &&
+					user.get().getCredentials().getPassword().equals(userRequest.getCredentials().getPassword())) {
+				user.get().setDeleted(false);
+				return userMapper.entityToDto(userRepository.saveAndFlush(user.get()));
+			} else {
+				throw new UserAlreadyExistException("Username: " + username + " is already taken!");
+			}
+		}  else {
+			return userMapper.entityToDto(
+					userRepository.saveAndFlush(userMapper.requestDtoToEntity(userRequest)));
+		}
 	}
 
 }
