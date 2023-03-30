@@ -17,4 +17,6 @@ public interface TweetService {
     TweetResponseDto getTweetById(Long id);
 
     void addLikeToTweet(Long id, CredentialsDto credentials);
+
+    List<TweetResponseDto> getUserTweets(String username);
 }

@@ -1,48 +1,39 @@
 package com.cooksys.assessment1Team3.controllers;
 
-import java.util.List;
-
-import com.cooksys.assessment1Team3.dtos.UserRequestDto;
-import org.springframework.web.bind.annotation.*;
-
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
+import com.cooksys.assessment1Team3.dtos.UserRequestDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.services.UserService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 	private final UserService userService;
-	
 
 	@GetMapping("/@{username}")
 	public UserResponseDto getUserByUsername(@PathVariable String username) {
+		System.out.println("Testing");
 		return userService.getUserByUsername(username);
 	}
-	
+
 	@GetMapping
 	public List<UserResponseDto> getUsers() {
 		return userService.getUsers();
 	}
 
-	// Use @PathVariable for data received in path. Arguments should be re-evaluated
 	@PatchMapping("/@{username}")
-	public UserResponseDto modifyUser(long id) {
-		return userService.modifyUser(id);
+	public UserResponseDto modifyUser(@PathVariable String username, @RequestBody UserRequestDto body) {
+		return userService.modifyUser(username, body);
 	}
-	
-	// Use @PathVariable for data received in path. Use Long wrapper class for DataType in arguments
+
 	@DeleteMapping("/@{username}")
-	public UserResponseDto deleteUser(@PathVariable Long id) {
-		return userService.deleteUser(id);
-	}
-	
-	@GetMapping("/@{username}/tweets")
-	public UserResponseDto getUserTweets(Long id) {
-		return userService.getUserTweets(id);
+	public UserResponseDto deleteUser(@PathVariable String username) {
+		return  userService.deleteUser(username);
 	}
 
 	@GetMapping("/@{username}/feed")

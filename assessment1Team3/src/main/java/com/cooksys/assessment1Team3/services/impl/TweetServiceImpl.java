@@ -25,7 +25,6 @@ public class TweetServiceImpl implements TweetService {
 
     private final TweetRepository tweetRepository;
     private final TweetMapper tweetMapper;
-    private final UserService userService;
     private final UserRepository userRepository;
 
     @Override
@@ -63,11 +62,22 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public void addLikeToTweet(Long id, CredentialsDto credentials) {
         Tweet tweetToBeLiked = getTweet(id);
-        User userToAddLike = userService.getUser(credentials.getUsername());
-        tweetToBeLiked.getLikes().add(userToAddLike);
-        userToAddLike.getLikedTweets().add(tweetToBeLiked);
+        String username = credentials.getUsername();
+        Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
 
-        tweetRepository.saveAndFlush(tweetToBeLiked);
-        userRepository.saveAndFlush(userToAddLike);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("User with username of " + username + " was not found in our database.");
+        } else {
+            tweetToBeLiked.getLikes().add(optionalUser.get());
+            optionalUser.get().getLikedTweets().add(tweetToBeLiked);
+
+            tweetRepository.saveAndFlush(tweetToBeLiked);
+            userRepository.saveAndFlush(optionalUser.get());
+        }
+    }
+
+    public List<TweetResponseDto> getUserTweets(String username) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

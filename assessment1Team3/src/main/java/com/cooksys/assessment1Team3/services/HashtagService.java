@@ -1,9 +1,9 @@
 package com.cooksys.assessment1Team3.services;
 
-import java.util.List;
-
 import com.cooksys.assessment1Team3.dtos.HashtagDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
+
+import java.util.List;
 
 public interface HashtagService {
 
