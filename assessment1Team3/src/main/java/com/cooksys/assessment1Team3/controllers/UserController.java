@@ -21,8 +21,9 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final UserService userService;
 	
-	@GetMapping("/{username}")
-	public UserResponseDto getUser(@PathVariable String username) {
+
+	@GetMapping("/@{username}")
+	public UserResponseDto getUserByUsername(@PathVariable String username) {
 		return userService.getUserByUsername(username);
 	}
 	
@@ -53,7 +54,7 @@ public class UserController {
 	public List<TweetResponseDto> getUserFeed(@PathVariable String username) {
 		return userService.getUserFeed(username);
 	}
-	
+
 	@GetMapping("/@{username}/following")
 	public List<UserResponseDto> getUserFollowing(@PathVariable String username) {
 		return userService.getUserFollowing(username);
@@ -63,4 +64,5 @@ public class UserController {
 	public List<UserResponseDto> getUserFollowers(@PathVariable String username) {
 		return userService.getUserFollowers(username);
 	}
+
 }
