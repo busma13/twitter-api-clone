@@ -21,8 +21,7 @@ public class HashtagServiceImpl implements HashtagService {
 
 	@Override
 	public List<HashtagDto> getAllHashtags() {
-		// TODO Auto-generated method stub
-		return null;
+		return hashtagMapper.entitiesToDtos(hashtagRepository.findAll());
 	}
 
 	@Override

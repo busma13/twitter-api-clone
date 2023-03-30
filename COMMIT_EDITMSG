@@ -1,0 +1,18 @@
+fixed modifyUser and @ issue
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# interactive rebase in progress; onto eb79790
+# Last commands done (2 commands done):
+#    pick 4ea48d4 implemented - [x] GET     tags - [x] GET   validate/username/exists/@{​​​​​​​username} - [x] GET     users/@{​​​​​​​username} - [x] DELETE  users/@{​​​​​​​username} Patch{username}
+#    pick 5f8358b still working on some issue
+# Next command to do (1 remaining command):
+#    pick f89eeaa fixed modifyUser and @ route
+# You are currently rebasing branch 'ichinnorov2' on 'eb79790'.
+#
+# Changes to be committed:
+#	modified:   assessment1Team3/src/main/java/com/cooksys/assessment1Team3/controllers/UserController.java
+#	modified:   assessment1Team3/src/main/java/com/cooksys/assessment1Team3/mappers/ProfileMapper.java
+#	modified:   assessment1Team3/src/main/java/com/cooksys/assessment1Team3/services/impl/UserServiceImpl.java
+#

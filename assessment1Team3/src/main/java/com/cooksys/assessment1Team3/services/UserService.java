@@ -3,6 +3,7 @@ package com.cooksys.assessment1Team3.services;
 import java.util.List;
 
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
+import com.cooksys.assessment1Team3.dtos.UserRequestDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.entities.User;
 
@@ -12,13 +13,9 @@ public interface UserService {
 
 	UserResponseDto getUserByUsername(String username);
 
-	UserResponseDto modifyUser(long id);
+	UserResponseDto modifyUser(String username, UserRequestDto body);
 
-	UserResponseDto deleteUser(long id);
-
-	UserResponseDto getUserTweets(Long id);
-
-	UserResponseDto getTweet(Long id);
+	UserResponseDto deleteUser(String username);
 
 	List<UserResponseDto> getUsers();
 
