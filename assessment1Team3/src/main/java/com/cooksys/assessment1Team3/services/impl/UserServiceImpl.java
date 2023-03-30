@@ -7,8 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.cooksys.assessment1Team3.dtos.UserRequestDto;
-import com.cooksys.assessment1Team3.entities.Credentials;
-import com.cooksys.assessment1Team3.entities.Profile;
 import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.entities.User;
 import com.cooksys.assessment1Team3.exceptions.BadRequestException;
