@@ -10,7 +10,6 @@ import com.cooksys.assessment1Team3.mappers.TweetMapper;
 import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import com.cooksys.assessment1Team3.repositories.UserRepository;
 import com.cooksys.assessment1Team3.services.TweetService;
-import com.cooksys.assessment1Team3.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +38,14 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public TweetResponseDto createTweet(TweetRequestDto tweetRequestDto) {
-        return null;
+
+        String username = tweetRequestDto.getCredentials().getUsername();
+        Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
+        Tweet tweetToSave = new Tweet();
+        tweetToSave.setAuthor(optionalUser.get());
+        tweetToSave.setContent(tweetToSave.getContent());
+
+        return tweetMapper.entityToDto(tweetToSave);
     }
 
     @Override
