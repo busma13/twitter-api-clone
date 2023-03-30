@@ -16,6 +16,6 @@ public interface TweetMapper {
 
     Tweet requestDtoToEntity(TweetRequestDto tweetRequestDto);
 
-    List<TweetResponseDto> entitiesToDtos(List<Tweet> tweets);
+    List<TweetResponseDto> entitiesToResponseDtos(List<Tweet> tweets);
 
 }

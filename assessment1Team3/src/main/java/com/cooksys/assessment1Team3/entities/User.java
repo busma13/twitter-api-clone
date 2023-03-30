@@ -2,17 +2,9 @@ package com.cooksys.assessment1Team3.entities;
 import java.sql.Timestamp;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +20,10 @@ public class User {
 	
 	// Embedded Credentials and Profile
 	@Embedded
+//	@AttributeOverrides({
+//			@AttributeOverride(name = "username", column = @Column(name = "username")),
+//			@AttributeOverride(name = "password", column = @Column(name = "password")),
+//	})
 	private Credentials credentials;
 	
 	@Embedded
