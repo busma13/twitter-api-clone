@@ -1,9 +1,17 @@
 package com.cooksys.assessment1Team3.services.impl;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.cooksys.assessment1Team3.entities.Credentials;
+import com.cooksys.assessment1Team3.entities.Tweet;
+import com.cooksys.assessment1Team3.exceptions.BadRequestException;
+import com.cooksys.assessment1Team3.exceptions.UserAlreadyExistException;
+import com.cooksys.assessment1Team3.mappers.TweetMapper;
+import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import org.springframework.stereotype.Service;
 
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
@@ -27,9 +35,24 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
+  
+	private final TweetMapper tweetMapper;
+  private final TweetRepository tweetRepository;
+  private final TweetService tweetService;
+  
 	private final ValidateService validateService;
-	private final TweetService tweetService;
 	private final ProfileMapper profileMapper;
+
+	private void validateUserRequest(UserRequestDto userRequestDto) {
+		if (userRequestDto.getCredentials().getUsername() == null ||
+				userRequestDto.getCredentials().getPassword() == null ||
+				userRequestDto.getProfile().getFirstName() == null ||
+				userRequestDto.getProfile().getLastName() == null ||
+				userRequestDto.getProfile().getEmail() == null ||
+				userRequestDto.getProfile().getPhone() == null) {
+			throw new BadRequestException("You must provide all the required fileds for the request.");
+		}
+	}
 
 	@Override
 	public User getUser(String username) {
@@ -72,23 +95,60 @@ public class UserServiceImpl implements UserService {
 	public List<UserResponseDto> getUserFollowing(String username) {
 		User user = getUser(username);
 
-		if (user.getFollowing() == null || user.getFollowing().isEmpty()) {
+		List<User> activeUserFollowing = user.getFollowing().stream()
+				.filter(user1 -> ! user1.isDeleted())
+				.collect(Collectors.toList());
+
+		if (activeUserFollowing == null || activeUserFollowing.isEmpty()) {
 			throw new NotFoundException("User with username of "
 					+ username + " does not have any following.");
 		}
-		return userMapper.entitiesToDtos(user.getFollowing());
+		return userMapper.entitiesToDtos(activeUserFollowing);
 	}
 
 	@Override
 	public List<UserResponseDto> getUserFollowers(String username) {
 		User user = getUser(username);
 
-		if (user.getFollowers() == null || user.getFollowers().isEmpty()) {
+		List<User> activeUserFollowers = user.getFollowers().stream()
+				.filter(user1 -> ! user1.isDeleted())
+				.collect(Collectors.toList());
+		if (activeUserFollowers == null || activeUserFollowers.isEmpty()) {
 			throw new NotFoundException("User with username of "
 					+ username + " does not have any followers.");
 		}
+		return userMapper.entitiesToDtos(activeUserFollowers);
+	}
 
-		return userMapper.entitiesToDtos(user.getFollowers());
+	@Override
+	public List<TweetResponseDto> getMentions(String username) {
+		User user = getUser(username);
+
+		List<Tweet> tweets =
+				tweetRepository.findByContentContainingAndDeletedFalse("#" + user.getCredentials().getUsername());
+
+		Collections.sort(tweets, Comparator.comparing(Tweet::getPosted).reversed());
+
+		return tweetMapper.entitiesToResponseDtos(tweets);
+	}
+
+	@Override
+	public UserResponseDto createUser(UserRequestDto userRequest) {
+		validateUserRequest(userRequest);
+		String username = userRequest.getCredentials().getUsername();
+		Optional<User> user = userRepository.findByCredentialsUsername(username);
+		if (user.isPresent()) {
+			if (user.get().isDeleted() &&
+					user.get().getCredentials().getPassword().equals(userRequest.getCredentials().getPassword())) {
+				user.get().setDeleted(false);
+				return userMapper.entityToDto(userRepository.saveAndFlush(user.get()));
+			} else {
+				throw new UserAlreadyExistException("Username: " + username + " is already taken!");
+			}
+		}  else {
+			return userMapper.entityToDto(
+					userRepository.saveAndFlush(userMapper.requestDtoToEntity(userRequest)));
+		}
 	}
 
 	@Override
@@ -113,7 +173,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDto deleteUser(String username) {
-		// how do i check if user credential doesn't match??
 		if (!validateService.validateUserExists(username)) {
 			throw new NotFoundException("User with username of " + username + " not found.");
 		}

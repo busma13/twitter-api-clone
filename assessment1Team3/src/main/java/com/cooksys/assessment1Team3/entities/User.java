@@ -3,6 +3,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
