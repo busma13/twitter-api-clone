@@ -1,10 +1,15 @@
 package com.cooksys.assessment1Team3.services.impl;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.entities.User;
+import com.cooksys.assessment1Team3.mappers.TweetMapper;
+import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import org.springframework.stereotype.Service;
 
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
@@ -23,7 +28,9 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
+	private final TweetMapper tweetMapper;
 	private final ValidateService validateService;
+	private final TweetRepository tweetRepository;
 
 	@Override
 	public User getUser(String username) {
@@ -96,23 +103,41 @@ public class UserServiceImpl implements UserService {
 	public List<UserResponseDto> getUserFollowing(String username) {
 		User user = getUser(username);
 
-		if (user.getFollowing() == null || user.getFollowing().isEmpty()) {
+		List<User> activeUserFollowing = user.getFollowing().stream()
+				.filter(user1 -> ! user1.isDeleted())
+				.collect(Collectors.toList());
+
+		if (activeUserFollowing == null || activeUserFollowing.isEmpty()) {
 			throw new NotFoundException("User with username of "
 					+ username + " does not have any following.");
 		}
-		return userMapper.entitiesToDtos(user.getFollowing());
+		return userMapper.entitiesToDtos(activeUserFollowing);
 	}
 
 	@Override
 	public List<UserResponseDto> getUserFollowers(String username) {
 		User user = getUser(username);
 
-		if (user.getFollowers() == null || user.getFollowers().isEmpty()) {
+		List<User> activeUserFollowers = user.getFollowers().stream()
+				.filter(user1 -> ! user1.isDeleted())
+				.collect(Collectors.toList());
+		if (activeUserFollowers == null || activeUserFollowers.isEmpty()) {
 			throw new NotFoundException("User with username of "
 					+ username + " does not have any followers.");
 		}
+		return userMapper.entitiesToDtos(activeUserFollowers);
+	}
 
-		return userMapper.entitiesToDtos(user.getFollowers());
+	@Override
+	public List<TweetResponseDto> getMentions(String username) {
+		User user = getUser(username);
+
+		List<Tweet> tweets =
+				tweetRepository.findByContentContainingAndDeletedFalse("#" + user.getCredentials().getUsername());
+
+		Collections.sort(tweets, Comparator.comparing(Tweet::getPosted).reversed());
+
+		return tweetMapper.entitiesToResponseDtos(tweets);
 	}
 
 }

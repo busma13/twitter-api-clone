@@ -31,8 +31,7 @@ public class UserController {
 	public List<UserResponseDto> getUsers() {
 		return userService.getUsers();
 	}
-	
-	
+
 	// Use @PathVariable for data received in path. Arguments should be re-evaluated
 	@PatchMapping("/@{username}")
 	public UserResponseDto modifyUser(long id) {
@@ -63,6 +62,11 @@ public class UserController {
 	@GetMapping("@{username}/followers")
 	public List<UserResponseDto> getUserFollowers(@PathVariable String username) {
 		return userService.getUserFollowers(username);
+	}
+
+	@GetMapping("/@{username}/mentions")
+	public List<TweetResponseDto> getMentions(@PathVariable String username) {
+		return userService.getMentions(username);
 	}
 
 }
