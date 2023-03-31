@@ -170,5 +170,12 @@ public class UserServiceImpl implements UserService {
 		return userMapper.entityToDto(userRepository.saveAndFlush(deletedUser));
 	}
 
+	@Override
+	public List<UserResponseDto> getMentions(Long id) {
+		Tweet tweet = tweetService.getTweet(id);
+		List<User> mentionedUsers = tweet.getMentionedUsers();
+		mentionedUsers = mentionedUsers.stream().filter(u -> !u.isDeleted()).collect(Collectors.toList());
+		return userMapper.entitiesToDtos(mentionedUsers);
+	}
 
 }

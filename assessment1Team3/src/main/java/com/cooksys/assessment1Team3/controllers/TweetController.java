@@ -1,8 +1,8 @@
 package com.cooksys.assessment1Team3.controllers;
 
 import com.cooksys.assessment1Team3.dtos.*;
-import com.cooksys.assessment1Team3.entities.Credentials;
 import com.cooksys.assessment1Team3.services.TweetService;
+import com.cooksys.assessment1Team3.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TweetController {
 
+
     private final TweetService tweetService;
+    private final UserService userService;
 
     @GetMapping
     public List<TweetResponseDto> getAllTweets() {
@@ -22,8 +24,13 @@ public class TweetController {
     }
 
     @GetMapping("/{id}")
-    public TweetResponseDto getTweetById(@PathVariable (name = "id") Long id) {
+    public TweetResponseDto getTweetById(@PathVariable(name = "id") Long id) {
         return tweetService.getTweetById(id);
+    }
+
+    @GetMapping("/{id}/mentions")
+    public List<UserResponseDto> getMentions(@PathVariable Long id) {
+        return userService.getMentions(id);
     }
 
     @PostMapping
@@ -37,9 +44,9 @@ public class TweetController {
         tweetService.addLikeToTweet(id, credentials);
     }
 
-    @GetMapping("/@{username}/tweets")
-    public List<TweetResponseDto> getUserTweets(@PathVariable String username) {
-        return tweetService.getUserTweets(username);
+    @DeleteMapping("/{id}")
+    public TweetResponseDto deleteTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
+        return tweetService.deleteTweet(id, credentialsDto);
     }
 
     @GetMapping("/@{id}/likes")
@@ -61,9 +68,9 @@ public class TweetController {
     public TweetResponseDto repostTweet(@PathVariable Long id, @RequestBody TweetRequestDto tweetRequestDto) {
         return tweetService.repostTweet(id, tweetRequestDto);
     }
-
-    @DeleteMapping("/{id}")
-    public TweetResponseDto deleteTweet(@PathVariable Long id, @RequestBody Credentials credentials) {
-        return tweetService.deleteTweet(id, credentials);
+    @GetMapping("/@{username}/tweets")
+    public List<TweetResponseDto> getUserTweets(@PathVariable String username) {
+        return tweetService.getUserTweets(username);
     }
+
 }

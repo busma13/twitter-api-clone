@@ -5,6 +5,7 @@ import com.cooksys.assessment1Team3.entities.Credentials;
 import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.entities.User;
 import com.cooksys.assessment1Team3.exceptions.NotFoundException;
+import com.cooksys.assessment1Team3.exceptions.NotAuthorizedException;
 import com.cooksys.assessment1Team3.mappers.HashtagMapper;
 import com.cooksys.assessment1Team3.mappers.TweetMapper;
 import com.cooksys.assessment1Team3.mappers.UserMapper;
@@ -73,11 +74,6 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
-    public TweetResponseDto deleteTweet(Long id, Credentials credentials) {
-        return null;
-    }
-
-    @Override
     public Tweet getTweet(Long id) {
         Optional<Tweet> optionalTweet = tweetRepository.findByIdAndDeletedFalse(id);
 
@@ -138,6 +134,25 @@ public class TweetServiceImpl implements TweetService {
         return tweetMapper.entityToDto(tweet.getContent());
     }
 
+	public TweetResponseDto deleteTweet(Long id, CredentialsDto credentialsDto) {
+		Optional<Tweet> optionalTweet = tweetRepository.findById(id);
+
+		if (optionalTweet.isEmpty()) {
+			throw new NotFoundException("We can't find a tweet with the id of " + id + " in our database.");
+		}
+  
+    Tweet tweet = optionalTweet.get();
+		Credentials authorCredentials = tweet.getAuthor().getCredentials();
+		if (!authorCredentials.getUsername().equals(credentialsDto.getUsername())
+				|| !authorCredentials.getPassword().equals(credentialsDto.getPassword())) {
+			throw new NotAuthorizedException("You do not have proper credentials to delete this tweet.");
+    }
+    
+    tweet.setDeleted(true);
+
+		return tweetMapper.entityToDto(tweet);
+	}
+	
     public List<TweetResponseDto> getUserTweets(String username) {
         Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
         if (optionalUser.isEmpty()) {
