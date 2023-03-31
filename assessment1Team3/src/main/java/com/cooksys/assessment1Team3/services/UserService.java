@@ -30,4 +30,5 @@ public interface UserService {
 	UserResponseDto createUser(UserRequestDto userRequest);
 
 	List<UserResponseDto> getMentions(Long id);
+
 }
