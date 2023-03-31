@@ -1,5 +1,6 @@
 package com.cooksys.assessment1Team3.controllers;
 
+import com.cooksys.assessment1Team3.dtos.*;
 
 import java.util.List;
 
@@ -13,11 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cooksys.assessment1Team3.dtos.CredentialsDto;
-import com.cooksys.assessment1Team3.dtos.HashtagDto;
-import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
-import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
-import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.services.TweetService;
 import com.cooksys.assessment1Team3.services.UserService;
 
@@ -95,6 +91,11 @@ public class TweetController {
 	@GetMapping("/{id}/replies")
 	public List<TweetResponseDto> getRepliesToTweet(@PathVariable Long id) {
 	    return tweetService.getRepliesToTweet(id);
+	}
+	
+	@GetMapping("/{id}/reposts")
+	public List<TweetResponseDto> getRepostsOfTweet(@PathVariable Long id) {
+	    return tweetService.getRepostsOfTweet(id);
 	}
 	
 }

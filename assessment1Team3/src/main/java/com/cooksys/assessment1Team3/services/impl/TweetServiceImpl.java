@@ -136,23 +136,17 @@ public class TweetServiceImpl implements TweetService {
     }
 
 	public TweetResponseDto deleteTweet(Long id, CredentialsDto credentialsDto) {
-		Optional<Tweet> optionalTweet = tweetRepository.findById(id);
-
-		if (optionalTweet.isEmpty()) {
-			throw new NotFoundException("We can't find a tweet with the id of " + id + " in our database.");
-		}
-  
-    Tweet tweet = optionalTweet.get();
+		Tweet tweet = getTweet(id);
 		Credentials authorCredentials = tweet.getAuthor().getCredentials();
 		if (!authorCredentials.getUsername().equals(credentialsDto.getUsername())
 				|| !authorCredentials.getPassword().equals(credentialsDto.getPassword())) {
 			throw new NotAuthorizedException("You do not have proper credentials to delete this tweet.");
-    }
-    
-    tweet.setDeleted(true);
-
+	    }
+	    
+	    tweet.setDeleted(true);
+	
 		return tweetMapper.entityToDto(tweet);
-	}
+		}
 	
     public List<TweetResponseDto> getUserTweets(String username) {
         Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
@@ -169,11 +163,7 @@ public class TweetServiceImpl implements TweetService {
 
 	@Override
 	public TweetResponseDto createReplyToTweet(Long id, TweetRequestDto tweetRequestDto) {
-		Optional<Tweet> optionalTweet = tweetRepository.findById(id);
-
-		if (optionalTweet.isEmpty()) {
-			throw new NotFoundException("We can't find a tweet with the id of " + id + " in our database.");
-		}
+		Tweet originalTweet = getTweet(id);
 		
 		CredentialsDto credentialsDto = tweetRequestDto.getCredentials();
 		Optional<User> optionalUser = userRepository.findByCredentialsUsername(credentialsDto.getUsername());
@@ -187,7 +177,6 @@ public class TweetServiceImpl implements TweetService {
 		}
 		
 		User author = optionalUser.get();
-		Tweet originalTweet = optionalTweet.get();
 		Tweet replyTweet = new Tweet();
 		replyTweet.setAuthor(author);
 		replyTweet.setInReplyTo(originalTweet);
@@ -198,13 +187,7 @@ public class TweetServiceImpl implements TweetService {
 	
 	@Override
 	public List<TweetResponseDto> getRepliesToTweet(Long id) {
-	    Optional<Tweet> optionalTweet = tweetRepository.findByIdAndDeletedFalse(id);
-
-	    if (optionalTweet.isEmpty()) {
-	        throw new NotFoundException("We can't find a tweet with the id of " + id + " in our database.");
-	    }
-	    
-	    Tweet originalTweet = optionalTweet.get();
+	    Tweet originalTweet = getTweet(id);
 	    List<Tweet> replies = originalTweet
 	            .getReplies()
 	            .stream()
@@ -213,6 +196,18 @@ public class TweetServiceImpl implements TweetService {
 	            .collect(Collectors.toList());
 
 	    return tweetMapper.entitiesToResponseDtos(replies);
+	}
+
+	@Override
+	public List<TweetResponseDto> getRepostsOfTweet(Long id) {
+		Tweet originalTweet = getTweet(id);
+		List<Tweet> reposts = originalTweet
+	            .getReposts()
+	            .stream()
+	            .filter(t -> !t.isDeleted())
+	            .sorted(Comparator.comparing(Tweet::getPosted).reversed())
+	            .collect(Collectors.toList());
+		return tweetMapper.entitiesToResponseDtos(reposts);
 	}
 }
 
