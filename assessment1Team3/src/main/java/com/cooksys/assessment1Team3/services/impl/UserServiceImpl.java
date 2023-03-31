@@ -1,12 +1,11 @@
 package com.cooksys.assessment1Team3.services.impl;
 
-import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
-import com.cooksys.assessment1Team3.dtos.UserRequestDto;
-import com.cooksys.assessment1Team3.dtos.UserResponseDto;
+import com.cooksys.assessment1Team3.dtos.*;
 import com.cooksys.assessment1Team3.entities.Profile;
 import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.entities.User;
 import com.cooksys.assessment1Team3.exceptions.BadRequestException;
+import com.cooksys.assessment1Team3.exceptions.NotAuthorizedException;
 import com.cooksys.assessment1Team3.exceptions.NotFoundException;
 import com.cooksys.assessment1Team3.exceptions.UserAlreadyExistException;
 import com.cooksys.assessment1Team3.mappers.ProfileMapper;
@@ -176,6 +175,30 @@ public class UserServiceImpl implements UserService {
 		List<User> mentionedUsers = tweet.getMentionedUsers();
 		mentionedUsers = mentionedUsers.stream().filter(u -> !u.isDeleted()).collect(Collectors.toList());
 		return userMapper.entitiesToDtos(mentionedUsers);
+	}
+
+	@Override
+	public void followUser(String username, CredentialsDto credentialsDto) {
+		System.out.println(credentialsDto);
+		if (!validateService.validateUserExists(username)) {
+			throw new NotFoundException("User with username of " + username + " not found.");
+		}
+
+		Optional<User> optionalUser = userRepository.findByCredentialsUsername(credentialsDto.getUsername());
+		if (optionalUser.isEmpty() || !optionalUser.get().getCredentials().getPassword().equals(credentialsDto.getPassword())) {
+			throw new NotAuthorizedException("Incorrect username or password.");
+		}
+
+		User followed = getUser(username);
+		User follower = optionalUser.get();
+		List<User> followingList = follower.getFollowing();
+		if (followingList.contains(followed)) {
+			throw new BadRequestException("You are already following that user.");
+		}
+
+		followingList.add(followed);
+		follower.setFollowing(followingList);
+		userRepository.saveAndFlush(follower);
 	}
 
 }

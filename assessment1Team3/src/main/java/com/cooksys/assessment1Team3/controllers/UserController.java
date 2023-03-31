@@ -1,5 +1,6 @@
 package com.cooksys.assessment1Team3.controllers;
 
+import com.cooksys.assessment1Team3.dtos.CredentialsDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.dtos.UserRequestDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
@@ -59,6 +60,11 @@ public class UserController {
 	@PostMapping
 	public UserResponseDto createUser(@RequestBody UserRequestDto userRequest) {
 		return userService.createUser(userRequest);
+	}
+	
+	@PostMapping("/@{username}/follow")
+	public void followUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto) {
+		userService.followUser(username, credentialsDto);
 	}
 
 }
