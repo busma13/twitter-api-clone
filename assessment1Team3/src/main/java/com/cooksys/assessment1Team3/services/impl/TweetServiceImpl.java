@@ -14,8 +14,10 @@ import com.cooksys.assessment1Team3.dtos.HashtagDto;
 import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
+import com.cooksys.assessment1Team3.entities.Credentials;
 import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.entities.User;
+import com.cooksys.assessment1Team3.exceptions.NotAuthorizedException;
 import com.cooksys.assessment1Team3.exceptions.NotFoundException;
 import com.cooksys.assessment1Team3.mappers.HashtagMapper;
 import com.cooksys.assessment1Team3.mappers.TweetMapper;
@@ -24,7 +26,6 @@ import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import com.cooksys.assessment1Team3.repositories.UserRepository;
 import com.cooksys.assessment1Team3.services.TweetService;
 import com.cooksys.assessment1Team3.services.UserService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -35,7 +36,6 @@ public class TweetServiceImpl implements TweetService {
     private final TweetMapper tweetMapper;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-//    private final UserService userService;
     private final HashtagMapper hashtagMapper;
 
     @Override
@@ -59,7 +59,6 @@ public class TweetServiceImpl implements TweetService {
 
         return tweetMapper.entityToDto(tweetToSave);
     }
-
     
 	@Override
 	public TweetResponseDto repostTweet(Long id, TweetRequestDto tweetRequestDto) {
@@ -77,8 +76,6 @@ public class TweetServiceImpl implements TweetService {
 		tweetRepository.saveAndFlush(tweet);
 		return tweetMapper.entityToDto(tweet);
 	}
-	
-   
 
     @Override
     public Tweet getTweet(Long id) {
@@ -141,7 +138,6 @@ public class TweetServiceImpl implements TweetService {
 		return tweetMapper.entityToDto(tweet.getContent());
 	}
 	
-	//display user tweet by reverse chronological order
     public List<TweetResponseDto> getUserTweets(String username) {
     	Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
     	if (optionalUser.isEmpty()) {
@@ -154,34 +150,4 @@ public class TweetServiceImpl implements TweetService {
         	return tweetMapper.entitiesToResponseDtos(tweetRepository.saveAllAndFlush(userTweets));
         }
     }
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
