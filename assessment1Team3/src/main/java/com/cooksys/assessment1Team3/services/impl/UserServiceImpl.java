@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -173,6 +174,14 @@ public class UserServiceImpl implements UserService {
 		User deletedUser = getUser(username);
 		deletedUser.setDeleted(true);
 		return userMapper.entityToDto(userRepository.saveAndFlush(deletedUser));
+	}
+
+	@Override
+	public List<UserResponseDto> getMentions(Long id) {
+		Tweet tweet = tweetService.getTweet(id);
+		List<User> mentionedUsers = tweet.getMentionedUsers();
+		mentionedUsers = mentionedUsers.stream().filter(u -> !u.isDeleted()).collect(Collectors.toList());
+		return userMapper.entitiesToDtos(mentionedUsers);
 	}
 
 }
