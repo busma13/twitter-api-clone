@@ -8,7 +8,7 @@ import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.entities.User;
 import com.cooksys.assessment1Team3.exceptions.BadRequestException;
 import com.cooksys.assessment1Team3.exceptions.NotFoundException;
-//import com.cooksys.assessment1Team3.exceptions.UserAlreadyExistException;
+import com.cooksys.assessment1Team3.exceptions.UserAlreadyExistException;
 import com.cooksys.assessment1Team3.mappers.ProfileMapper;
 import com.cooksys.assessment1Team3.mappers.TweetMapper;
 import com.cooksys.assessment1Team3.mappers.UserMapper;
@@ -18,7 +18,6 @@ import com.cooksys.assessment1Team3.services.UserService;
 import com.cooksys.assessment1Team3.services.ValidateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -133,8 +132,7 @@ public class UserServiceImpl implements UserService {
 				user.get().setDeleted(false);
 				return userMapper.entityToDto(userRepository.saveAndFlush(user.get()));
 			} else {
-//				throw new UserAlreadyExistException("Username: " + username + " is already taken!");
-				throw new NotFoundException("test exceptiion");
+				throw new UserAlreadyExistException("Username: " + username + " is already taken!");
 			}
 		}  else {
 			return userMapper.entityToDto(
