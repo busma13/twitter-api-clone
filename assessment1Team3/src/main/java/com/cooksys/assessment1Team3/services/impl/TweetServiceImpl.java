@@ -1,12 +1,5 @@
 package com.cooksys.assessment1Team3.services.impl;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
 import com.cooksys.assessment1Team3.dtos.CredentialsDto;
 import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
@@ -19,8 +12,13 @@ import com.cooksys.assessment1Team3.mappers.TweetMapper;
 import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import com.cooksys.assessment1Team3.repositories.UserRepository;
 import com.cooksys.assessment1Team3.services.TweetService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,11 +42,14 @@ public class TweetServiceImpl implements TweetService {
 
 		String username = tweetRequestDto.getCredentials().getUsername();
 		Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
+		if (optionalUser.isEmpty()) {
+			throw new NotFoundException("User: " + username + " doesn't not exist or inactive.");
+		}
 		Tweet tweetToSave = new Tweet();
 		tweetToSave.setAuthor(optionalUser.get());
-		tweetToSave.setContent(tweetToSave.getContent());
+		tweetToSave.setContent(tweetRequestDto.getContent());
 
-		return tweetMapper.entityToDto(tweetToSave);
+		return tweetMapper.entityToDto(tweetRepository.saveAndFlush(tweetToSave));
 	}
 
 	@Override
