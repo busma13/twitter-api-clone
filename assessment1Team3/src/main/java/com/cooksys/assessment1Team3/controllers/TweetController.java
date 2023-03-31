@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cooksys.assessment1Team3.dtos.CredentialsDto;
+import com.cooksys.assessment1Team3.dtos.HashtagDto;
 import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
+import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.entities.Credentials;
 import com.cooksys.assessment1Team3.services.TweetService;
 
@@ -51,6 +53,26 @@ public class TweetController {
     @GetMapping("/@{username}/tweets")
     public List<TweetResponseDto> getUserTweets(@PathVariable String username) {
         return tweetService.getUserTweets(username);
+    }
+    
+    @GetMapping("/@{id}/likes")
+    public List<UserResponseDto> getTweetLikesByTweetId(@PathVariable Long id){
+    	return tweetService.getTweetLikesByTweetId(id);
+    }
+    
+    @GetMapping("/@{id}/tags")
+    public List<HashtagDto> getTweetTagsByTweetId(@PathVariable Long id){
+    	return tweetService.getTweetTagsByTweetId(id);
+    }
+ 
+    @GetMapping("/@{id}/context")
+    public TweetResponseDto getTweetContextByTweetId(@PathVariable Long id){
+    	return tweetService.getTweetContextByTweetId(id);
+    }
+    	
+    @PostMapping("/@{id}/repost")
+    public TweetResponseDto repostTweet(@PathVariable Long id, @RequestBody TweetRequestDto tweetRequestDto) {
+    	return tweetService.repostTweet(id, tweetRequestDto);
     }
     
     @DeleteMapping("/{id}")
