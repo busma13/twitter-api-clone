@@ -21,6 +21,6 @@ public interface TweetService {
 
 	List<TweetResponseDto> getUserTweets(String username);
 
-	TweetResponseDto deleteTweet(Long id, Credentials credentials);
+	TweetResponseDto deleteTweet(Long id, CredentialsDto credentialsDto);
 
 }

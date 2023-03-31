@@ -90,7 +90,7 @@ public class TweetServiceImpl implements TweetService {
 	}
 
 	@Override
-	public TweetResponseDto deleteTweet(Long id, Credentials credentials) {
+	public TweetResponseDto deleteTweet(Long id, CredentialsDto credentialsDto) {
 		Optional<Tweet> optionalTweet = tweetRepository.findById(id);
 
 		if (optionalTweet.isEmpty()) {
@@ -99,8 +99,8 @@ public class TweetServiceImpl implements TweetService {
 
 		Tweet tweet = optionalTweet.get();
 		Credentials authorCredentials = tweet.getAuthor().getCredentials();
-		if (!authorCredentials.getUsername().equals(credentials.getUsername())
-				|| !authorCredentials.getPassword().equals(credentials.getPassword())) {
+		if (!authorCredentials.getUsername().equals(credentialsDto.getUsername())
+				|| !authorCredentials.getPassword().equals(credentialsDto.getPassword())) {
 			throw new NotAuthorizedException("You do not have proper credentials to delete this tweet.");
 		}
 
