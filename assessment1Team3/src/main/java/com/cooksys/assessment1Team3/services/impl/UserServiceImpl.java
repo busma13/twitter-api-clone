@@ -76,8 +76,7 @@ public class UserServiceImpl implements UserService {
 		for (User follow : user.getFollowing()) {
 			tweets.addAll(tweetService.getUserTweets(follow.toString()));
 		}
-		tweets.sort((e1, e2) -> e1.getPosted().compareTo(e2.getPosted()));
-		Collections.reverse(tweets);
+		Collections.sort(tweets, Comparator.comparing(TweetResponseDto::getPosted).reversed());
 		return tweets;
 	}
 
