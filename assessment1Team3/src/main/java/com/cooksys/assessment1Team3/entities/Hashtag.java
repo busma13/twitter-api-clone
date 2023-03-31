@@ -26,6 +26,8 @@ public class Hashtag {
 
     @UpdateTimestamp
     private Timestamp lastUsed;
+    
+    private boolean deleted=false;
 
     @ManyToMany(mappedBy = "hashtags", cascade = CascadeType.ALL)
     private List<Tweet> tweets;
