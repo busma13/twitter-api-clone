@@ -1,11 +1,12 @@
 package com.cooksys.assessment1Team3.services;
 
+import java.util.List;
+
+import com.cooksys.assessment1Team3.dtos.CredentialsDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.dtos.UserRequestDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.entities.User;
-
-import java.util.List;
 
 public interface UserService {
 
@@ -30,5 +31,7 @@ public interface UserService {
 	UserResponseDto createUser(UserRequestDto userRequest);
 
 	List<UserResponseDto> getMentions(Long id);
+
+	void followUser(String username, CredentialsDto credentialsDto);
 
 }
