@@ -41,11 +41,14 @@ public class TweetServiceImpl implements TweetService {
 
         String username = tweetRequestDto.getCredentials().getUsername();
         Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("User: " + username + " doesn't not exist or inactive.");
+        }
         Tweet tweetToSave = new Tweet();
         tweetToSave.setAuthor(optionalUser.get());
-        tweetToSave.setContent(tweetToSave.getContent());
+        tweetToSave.setContent(tweetRequestDto.getContent());
 
-        return tweetMapper.entityToDto(tweetToSave);
+        return tweetMapper.entityToDto(tweetRepository.saveAndFlush(tweetToSave));
     }
 
     @Override

@@ -12,7 +12,6 @@ import com.cooksys.assessment1Team3.exceptions.UserAlreadyExistException;
 import com.cooksys.assessment1Team3.mappers.ProfileMapper;
 import com.cooksys.assessment1Team3.mappers.TweetMapper;
 import com.cooksys.assessment1Team3.mappers.UserMapper;
-import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import com.cooksys.assessment1Team3.repositories.UserRepository;
 import com.cooksys.assessment1Team3.services.TweetService;
 import com.cooksys.assessment1Team3.services.UserService;
@@ -20,10 +19,7 @@ import com.cooksys.assessment1Team3.services.ValidateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +29,6 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
 	private final TweetMapper tweetMapper;
-	private final TweetRepository tweetRepository;
 	private final TweetService tweetService;
 	private final ValidateService validateService;
 	private final ProfileMapper profileMapper;
@@ -119,10 +114,10 @@ public class UserServiceImpl implements UserService {
 	public List<TweetResponseDto> getMentions(String username) {
 		User user = getUser(username);
 
-		List<Tweet> tweets =
-				tweetRepository.findByContentContainingAndDeletedFalse("#" + user.getCredentials().getUsername());
-
-		Collections.sort(tweets, Comparator.comparing(Tweet::getPosted).reversed());
+		List<Tweet> tweets = user.getMentionedTweets().stream()
+				.filter(tweet -> Objects.nonNull(tweet.getContent()))
+				.sorted(Comparator.comparing(Tweet::getPosted).reversed())
+				.collect(Collectors.toList());
 
 		return tweetMapper.entitiesToResponseDtos(tweets);
 	}
