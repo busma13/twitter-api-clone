@@ -5,6 +5,7 @@ import com.cooksys.assessment1Team3.entities.Credentials;
 import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.entities.User;
 import com.cooksys.assessment1Team3.exceptions.NotFoundException;
+import com.cooksys.assessment1Team3.exceptions.BadRequestException;
 import com.cooksys.assessment1Team3.exceptions.NotAuthorizedException;
 import com.cooksys.assessment1Team3.mappers.HashtagMapper;
 import com.cooksys.assessment1Team3.mappers.TweetMapper;
@@ -165,4 +166,53 @@ public class TweetServiceImpl implements TweetService {
             return tweetMapper.entitiesToResponseDtos(tweetRepository.saveAllAndFlush(userTweets));
         }
     }
+
+	@Override
+	public TweetResponseDto createReplyToTweet(Long id, TweetRequestDto tweetRequestDto) {
+		Optional<Tweet> optionalTweet = tweetRepository.findById(id);
+
+		if (optionalTweet.isEmpty()) {
+			throw new NotFoundException("We can't find a tweet with the id of " + id + " in our database.");
+		}
+		
+		CredentialsDto credentialsDto = tweetRequestDto.getCredentials();
+		Optional<User> optionalUser = userRepository.findByCredentialsUsername(credentialsDto.getUsername());
+		if (optionalUser.isEmpty() || !optionalUser.get().getCredentials().getPassword().equals(credentialsDto.getPassword())) {
+			throw new NotAuthorizedException("Incorrect username or password.");
+		}
+		
+		String content = tweetRequestDto.getContent();
+		if (content.isBlank()) {
+			throw new BadRequestException("Reply tweets must contain content.");
+		}
+		
+		User author = optionalUser.get();
+		Tweet originalTweet = optionalTweet.get();
+		Tweet replyTweet = new Tweet();
+		replyTweet.setAuthor(author);
+		replyTweet.setInReplyTo(originalTweet);
+		replyTweet.setContent(content);
+		
+		return tweetMapper.entityToDto(tweetRepository.saveAndFlush(replyTweet));
+	}
+	
+	@Override
+	public List<TweetResponseDto> getRepliesToTweet(Long id) {
+	    Optional<Tweet> optionalTweet = tweetRepository.findByIdAndDeletedFalse(id);
+
+	    if (optionalTweet.isEmpty()) {
+	        throw new NotFoundException("We can't find a tweet with the id of " + id + " in our database.");
+	    }
+	    
+	    Tweet originalTweet = optionalTweet.get();
+	    List<Tweet> replies = originalTweet
+	            .getReplies()
+	            .stream()
+	            .filter(t -> !t.isDeleted())
+	            .sorted(Comparator.comparing(Tweet::getPosted).reversed())
+	            .collect(Collectors.toList());
+
+	    return tweetMapper.entitiesToResponseDtos(replies);
+	}
 }
+

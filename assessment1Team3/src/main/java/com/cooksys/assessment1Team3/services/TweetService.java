@@ -1,14 +1,13 @@
 package com.cooksys.assessment1Team3.services;
 
+import java.util.List;
+
 import com.cooksys.assessment1Team3.dtos.CredentialsDto;
 import com.cooksys.assessment1Team3.dtos.HashtagDto;
 import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
 import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
 import com.cooksys.assessment1Team3.dtos.UserResponseDto;
-import com.cooksys.assessment1Team3.entities.Credentials;
 import com.cooksys.assessment1Team3.entities.Tweet;
-
-import java.util.List;
 
 public interface TweetService {
 	List<TweetResponseDto> getAllTweets();
@@ -32,5 +31,9 @@ public interface TweetService {
 	TweetResponseDto repostTweet(Long id, TweetRequestDto tweetRequestDto);
 
 	TweetResponseDto deleteTweet(Long id, CredentialsDto credentialsDto);
+
+	TweetResponseDto createReplyToTweet(Long id, TweetRequestDto tweetRequestDto);
+
+	List<TweetResponseDto> getRepliesToTweet(Long id);
 
 }
