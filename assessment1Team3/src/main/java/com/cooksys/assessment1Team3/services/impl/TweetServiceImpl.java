@@ -1,6 +1,7 @@
 package com.cooksys.assessment1Team3.services.impl;
 
 import com.cooksys.assessment1Team3.dtos.*;
+
 import com.cooksys.assessment1Team3.entities.Credentials;
 import com.cooksys.assessment1Team3.entities.Hashtag;
 import com.cooksys.assessment1Team3.entities.Tweet;
@@ -140,7 +141,6 @@ public class TweetServiceImpl implements TweetService {
 			throw new NotAuthorizedException("Incorrect username or password.");
 		}
 		tweet.setAuthor(user);
-//        tweet.setContent(usedTweet.getContent());
 		tweet.setPosted(new Timestamp(System.currentTimeMillis()));
 		tweet.setRepostOf(usedTweet);
 		tweetRepository.saveAndFlush(tweet);
@@ -210,6 +210,20 @@ public class TweetServiceImpl implements TweetService {
 		return hashtagMapper.entitiesToDtos(tweet.getHashtags());
 	}
 
+	private List<Tweet> getRepliesRecursively(Tweet tweet) {
+		List<Tweet> replies = tweet.getReplies();
+		List<Tweet> results = new ArrayList<>();
+		if (replies.isEmpty()) {
+			return null;
+		}
+		replies.forEach(t -> {
+			List<Tweet> temp = getRepliesRecursively(t);
+			if (temp != null) {
+				results.addAll(temp);
+			}
+		});
+		return results;
+	}
 	@Override
 	public ContextDto getTweetContextByTweetId(Long id) {
 
@@ -217,6 +231,21 @@ public class TweetServiceImpl implements TweetService {
 		if (tweet.isDeleted() || tweet == null) {
 			throw new NotFoundException("Tweet with id " + id + " was not found in our database.");
 		}
+		
+		List<Tweet> afterList = new ArrayList<>();
+		List<Tweet> currentReplies = tweet.getReplies();
+		for (Tweet t : currentReplies) {
+			List<Tweet> temp = getRepliesRecursively(t);
+			if (temp != null) {
+				afterList.addAll(temp);
+			}
+		}
+		
+		List<Tweet> activeAfterList = afterList.stream()
+				.filter(tweet1 -> ! tweet1.isDeleted())
+				.sorted(Comparator.comparing(Tweet::getPosted).reversed())
+				.collect(Collectors.toList());	
+
 
 		List<Tweet> beforeList = new ArrayList<>();
 
@@ -230,10 +259,10 @@ public class TweetServiceImpl implements TweetService {
 				.filter(tweet1 -> ! tweet1.isDeleted())
 				.sorted(Comparator.comparing(Tweet::getPosted).reversed())
 				.collect(Collectors.toList());
-
+		
 		ContextDto contextDto = new ContextDto();
 		contextDto.setTarget(tweetMapper.entityToDto(tweet));
-		contextDto.setAfter(getAllTweets());
+		contextDto.setAfter(tweetMapper.entitiesToResponseDtos(activeAfterList));
 		contextDto.setBefore(tweetMapper.entitiesToResponseDtos(activeBeforeList));
 
 		return contextDto;
