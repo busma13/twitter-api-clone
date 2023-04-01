@@ -2,6 +2,7 @@ package com.cooksys.assessment1Team3.controllers;
 
 import java.util.List;
 
+import com.cooksys.assessment1Team3.services.TweetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/users")
 public class UserController {
 	private final UserService userService;
+	private final TweetService tweetService;
 
 	@GetMapping("/@{username}")
 	public UserResponseDto getUserByUsername(@PathVariable String username) {
@@ -82,7 +84,7 @@ public class UserController {
 	
 	@GetMapping("/@{username}/tweets")
     public List<TweetResponseDto> getUserTweets(@PathVariable String username) {
-        return userService.getUserTweets(username);
+        return tweetService.getUserTweets(username);
     }
 
 }
