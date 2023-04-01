@@ -65,7 +65,7 @@ public class TweetController {
     }
 
     @GetMapping("/{id}/context")
-    public TweetResponseDto getTweetContextByTweetId(@PathVariable Long id){
+    public ContextDto getTweetContextByTweetId(@PathVariable Long id){
         return tweetService.getTweetContextByTweetId(id);
     }
 

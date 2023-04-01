@@ -2,6 +2,7 @@ package com.cooksys.assessment1Team3.services;
 
 import java.util.List;
 
+import com.cooksys.assessment1Team3.dtos.ContextDto;
 import com.cooksys.assessment1Team3.dtos.CredentialsDto;
 import com.cooksys.assessment1Team3.dtos.HashtagDto;
 import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
@@ -26,7 +27,7 @@ public interface TweetService {
 
 	List<HashtagDto> getTweetTagsByTweetId(Long id);
 
-	TweetResponseDto getTweetContextByTweetId(Long id);
+	ContextDto getTweetContextByTweetId(Long id);
 
 	TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto);
 

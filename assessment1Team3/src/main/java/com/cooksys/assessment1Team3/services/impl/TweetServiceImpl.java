@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.cooksys.assessment1Team3.dtos.ContextDto;
 import com.cooksys.assessment1Team3.dtos.CredentialsDto;
 import com.cooksys.assessment1Team3.dtos.HashtagDto;
 import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
@@ -220,13 +221,59 @@ public class TweetServiceImpl implements TweetService {
 		return hashtagMapper.entitiesToDtos(tweet.getHashtags());
 	}
 
+	private List<Tweet> getRepliesRecursively(Tweet tweet) {
+		List<Tweet> replies = tweet.getReplies();
+		List<Tweet> results = new ArrayList<>();
+		if (replies.isEmpty()) {
+			return null;
+		}
+		replies.forEach(t -> {
+			List<Tweet> temp = getRepliesRecursively(t);
+			if (temp != null) {
+				results.addAll(temp);
+			}
+		});
+		return results;
+	}
 	@Override
-	public TweetResponseDto getTweetContextByTweetId(Long id) {
+	public ContextDto getTweetContextByTweetId(Long id) {
 		Tweet tweet = getTweet(id);
 		if (tweet.isDeleted() || tweet == null) {
 			throw new NotFoundException("Tweet with id " + id + " was not found in our database.");
 		}
-		return tweetMapper.entityToDto(tweet.getContent());
+		
+		List<Tweet> afterList = new ArrayList<>();
+		List<Tweet> currentReplies = tweet.getReplies();
+		for (Tweet t : currentReplies) {
+			List<Tweet> temp = getRepliesRecursively(t);
+			if (temp != null) {
+				afterList.addAll(temp);
+			}
+		}
+		
+		List<Tweet> activeAfterList = afterList.stream()
+				.filter(tweet1 -> ! tweet1.isDeleted())
+				.sorted(Comparator.comparing(Tweet::getPosted).reversed())
+				.collect(Collectors.toList());
+		
+		List<Tweet> beforeList = new ArrayList<>();
+
+		Tweet currentTweet = tweet.getInReplyTo();
+		while (currentTweet != null) {
+			beforeList.add(currentTweet);
+			currentTweet = currentTweet.getInReplyTo();
+		}
+
+		List<Tweet> activeBeforeList = beforeList.stream()
+				.filter(tweet1 -> ! tweet1.isDeleted())
+				.sorted(Comparator.comparing(Tweet::getPosted).reversed())
+				.collect(Collectors.toList());
+		
+		ContextDto contextDto = new ContextDto();
+		contextDto.setTarget(tweetMapper.entityToDto(tweet));
+		contextDto.setAfter(tweetMapper.entitiesToResponseDtos(activeAfterList));
+		contextDto.setBefore(tweetMapper.entitiesToResponseDtos(activeBeforeList));
+		return contextDto;
 	}
 
 	public TweetResponseDto deleteTweet(Long id, CredentialsDto credentialsDto) {
