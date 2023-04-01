@@ -156,6 +156,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDto modifyUser(String username, UserRequestDto body) {
+		validateUserRequest(body);
+
+		Optional<User> optionalUser = userRepository.findByCredentialsUsername(body.getCredentials().getUsername());
+		if (optionalUser.isEmpty()
+				|| !optionalUser.get().getCredentials().getPassword().equals(body.getCredentials().getPassword())) {
+			throw new NotAuthorizedException("Incorrect username or password.");
+		}
+
 		User user = getUser(username);
 		// validate credential
 		Profile mappedUserProfile = profileMapper.dtoToEntity(body.getProfile());
@@ -243,6 +251,12 @@ public class UserServiceImpl implements UserService {
 		followingList.remove(followed);
 		follower.setFollowing(followingList);
 		userRepository.saveAndFlush(follower);
+
+		List<User> followedList = followed.getFollowers();
+		followedList.remove(follower);
+		followed.setFollowers(followedList);
+		userRepository.saveAndFlush(followed);
+
 	}
 
 }

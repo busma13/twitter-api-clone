@@ -31,6 +31,7 @@ public class UserController {
 	}
 
 	@PatchMapping("/@{username}")
+
 	public UserResponseDto modifyUser(@PathVariable String username, @RequestBody UserRequestDto body) {
 		return userService.modifyUser(username, body);
 	}
@@ -67,6 +68,7 @@ public class UserController {
 	}
 
 	@PostMapping("/@{username}/follow")
+	@ResponseStatus(HttpStatus.OK)
 	public void followUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto) {
 		userService.followUser(username, credentialsDto);
 	}
