@@ -54,28 +54,24 @@ public class TweetController {
         tweetService.addLikeToTweet(id, credentials);
     }
 
-    @GetMapping("/@{id}/likes")
+    @GetMapping("/{id}/likes")
     public List<UserResponseDto> getTweetLikesByTweetId(@PathVariable Long id){
         return tweetService.getTweetLikesByTweetId(id);
     }
 
-    @GetMapping("/@{id}/tags")
+    @GetMapping("/{id}/tags")
     public List<HashtagDto> getTweetTagsByTweetId(@PathVariable Long id){
         return tweetService.getTweetTagsByTweetId(id);
     }
 
-    @GetMapping("/@{id}/context")
+    @GetMapping("/{id}/context")
     public TweetResponseDto getTweetContextByTweetId(@PathVariable Long id){
         return tweetService.getTweetContextByTweetId(id);
     }
 
-    @PostMapping("/@{id}/repost")
+    @PostMapping("/{id}/repost")
     public TweetResponseDto repostTweet(@PathVariable Long id, @RequestBody TweetRequestDto tweetRequestDto) {
         return tweetService.repostTweet(id, tweetRequestDto);
-    }
-    @GetMapping("/@{username}/tweets")
-    public List<TweetResponseDto> getUserTweets(@PathVariable String username) {
-        return tweetService.getUserTweets(username);
     }
 
 	@DeleteMapping("/{id}")

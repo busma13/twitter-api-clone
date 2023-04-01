@@ -82,13 +82,16 @@ public class UserServiceImpl implements UserService {
 		if (!validateService.validateUserExists(username) || user.isDeleted()) {
 			throw new NotFoundException("There is no active user with name " + username);
 		}
-		List<TweetResponseDto> tweets = tweetService.getUserTweets(username);
-		System.out.println(tweets);
+
+		List<Tweet> tweets = tweetRepository.findByAuthorAndDeletedFalse(user);
+
 		for (User follow : user.getFollowing()) {
-			tweets.addAll(tweetService.getUserTweets(follow.toString()));
+			tweets.addAll(tweetRepository.findByAuthorAndDeletedFalse(follow));
 		}
-		Collections.sort(tweets, Comparator.comparing(TweetResponseDto::getPosted).reversed());
-		return tweets;
+
+		Collections.sort(tweets, Comparator.comparing(Tweet::getPosted).reversed());
+
+		return tweetMapper.entitiesToResponseDtos(tweets);
 	}
 
 	@Override
@@ -98,9 +101,7 @@ public class UserServiceImpl implements UserService {
 		List<User> activeUserFollowing = user.getFollowing().stream().filter(user1 -> !user1.isDeleted())
 				.collect(Collectors.toList());
 
-		if (activeUserFollowing == null || activeUserFollowing.isEmpty()) {
-			throw new NotFoundException("User with username of " + username + " does not have any following.");
-		}
+
 		return userMapper.entitiesToDtos(activeUserFollowing);
 	}
 
@@ -110,20 +111,13 @@ public class UserServiceImpl implements UserService {
 
 		List<User> activeUserFollowers = user.getFollowers().stream().filter(user1 -> !user1.isDeleted())
 				.collect(Collectors.toList());
-		if (activeUserFollowers == null || activeUserFollowers.isEmpty()) {
-			throw new NotFoundException("User with username of " + username + " does not have any followers.");
-		}
+
 		return userMapper.entitiesToDtos(activeUserFollowers);
 	}
 
 	@Override
 	public List<TweetResponseDto> getMentions(String username) {
-//		User user = getUser(username);
-//
-//		List<Tweet> tweets = user.getMentionedTweets().stream().filter(tweet -> Objects.nonNull(tweet.getContent()))
-//				.sorted(Comparator.comparing(Tweet::getPosted).reversed()).collect(Collectors.toList());
-//
-//		return tweetMapper.entitiesToResponseDtos(tweets);
+
 		User user = getUser(username);
 
 		List<Tweet> tweets =
@@ -156,9 +150,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserResponseDto modifyUser(String username, UserRequestDto body) {
-		validateUserRequest(body);
+
+		if (body.getCredentials() == null ||
+				body.getProfile() == null ||
+				body.getCredentials().getUsername() == null ||
+				body.getCredentials().getPassword() == null) {
+			throw new BadRequestException("You must provide all the required fields for the request.");
+		}
 
 		Optional<User> optionalUser = userRepository.findByCredentialsUsername(body.getCredentials().getUsername());
+
 		if (optionalUser.isEmpty()
 				|| !optionalUser.get().getCredentials().getPassword().equals(body.getCredentials().getPassword())) {
 			throw new NotAuthorizedException("Incorrect username or password.");
@@ -179,6 +180,7 @@ public class UserServiceImpl implements UserService {
 		if (mappedUserProfile.getPhone() != null) {
 			user.getProfile().setPhone(mappedUserProfile.getPhone());
 		}
+
 		return userMapper.entityToDto(userRepository.saveAndFlush(user));
 	}
 

@@ -2,6 +2,7 @@ package com.cooksys.assessment1Team3.services.impl;
 
 import com.cooksys.assessment1Team3.dtos.*;
 import com.cooksys.assessment1Team3.entities.Credentials;
+import com.cooksys.assessment1Team3.entities.Hashtag;
 import com.cooksys.assessment1Team3.entities.Tweet;
 import com.cooksys.assessment1Team3.entities.User;
 import com.cooksys.assessment1Team3.exceptions.NotFoundException;
@@ -10,6 +11,7 @@ import com.cooksys.assessment1Team3.exceptions.NotAuthorizedException;
 import com.cooksys.assessment1Team3.mappers.HashtagMapper;
 import com.cooksys.assessment1Team3.mappers.TweetMapper;
 import com.cooksys.assessment1Team3.mappers.UserMapper;
+import com.cooksys.assessment1Team3.repositories.HashtagRepository;
 import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import com.cooksys.assessment1Team3.repositories.UserRepository;
 import com.cooksys.assessment1Team3.services.TweetService;
@@ -17,10 +19,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +34,7 @@ public class TweetServiceImpl implements TweetService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final HashtagMapper hashtagMapper;
+    private final HashtagRepository hashtagRepository;
 
     private void validateTweetRequest(TweetRequestDto tweetRequestDto) {
         if (tweetRequestDto.getCredentials() == null ||
@@ -67,6 +70,59 @@ public class TweetServiceImpl implements TweetService {
         Tweet tweetToSave = new Tweet();
         tweetToSave.setAuthor(optionalUser.get());
         tweetToSave.setContent(tweetRequestDto.getContent());
+
+
+        String regexPatternHashtag = "(#\\w+)";
+
+        Pattern p = Pattern.compile(regexPatternHashtag);
+        Matcher m = p.matcher(tweetToSave.getContent());
+
+        List<Hashtag> hashtags = new ArrayList<>();
+
+        while (m.find()) {
+            Hashtag hashtag = new Hashtag();
+            String string = m.group(1);
+            string = string.replace("#", "");
+
+            Optional<Hashtag> optionalHashtag = hashtagRepository.findByLabel(string);
+
+            if (optionalHashtag.isEmpty()) {
+                hashtag.setLabel(string);
+
+                hashtagRepository.saveAndFlush(hashtag);
+
+            } else {
+                hashtag = optionalHashtag.get();
+                hashtag.setLastUsed(Timestamp.valueOf(LocalDateTime.now()));
+
+                hashtagRepository.saveAndFlush(hashtag);
+            }
+
+            hashtags.add(hashtag);
+        }
+
+        tweetToSave.setHashtags(hashtags);
+
+        String regexPatternMention = "(@\\w+)";
+
+        Pattern p2 = Pattern.compile(regexPatternMention);
+        Matcher m2 = p2.matcher(tweetToSave.getContent());
+
+        List<User> mentionedUsers = new ArrayList<>();
+        while (m2.find()) {
+            User mentionedUser = new User();
+            String string = m2.group(1);
+            string = string.replace("@", "");
+
+            Optional<User> optionalUser2 = userRepository.findByCredentialsUsername(string);
+
+            if (optionalUser2.isPresent()) {
+                mentionedUser = optionalUser2.get();
+                mentionedUsers.add(mentionedUser);
+            }
+
+        }
+        tweetToSave.setMentionedUsers(mentionedUsers);
 
         return tweetMapper.entityToDto(tweetRepository.saveAndFlush(tweetToSave));
     }
@@ -137,6 +193,7 @@ public class TweetServiceImpl implements TweetService {
         if(tweet.isDeleted() || tweet == null) {
             throw new NotFoundException("Tweet with id " + id + " was not found in our database.");
         }
+
         return hashtagMapper.entitiesToDtos(tweet.getHashtags());
     }
 
@@ -161,7 +218,7 @@ public class TweetServiceImpl implements TweetService {
 	
 		return tweetMapper.entityToDto(tweet);
 		}
-	
+
     public List<TweetResponseDto> getUserTweets(String username) {
         Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
         if (optionalUser.isEmpty()) {

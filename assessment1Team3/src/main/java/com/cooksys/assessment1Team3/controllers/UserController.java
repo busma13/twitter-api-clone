@@ -2,6 +2,7 @@ package com.cooksys.assessment1Team3.controllers;
 
 import java.util.List;
 
+import com.cooksys.assessment1Team3.services.impl.TweetServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/users")
 public class UserController {
 	private final UserService userService;
+	private final TweetServiceImpl tweetService;
 
 	@GetMapping("/@{username}")
 	public UserResponseDto getUserByUsername(@PathVariable String username) {
@@ -78,6 +80,11 @@ public class UserController {
 	public void unfollowUser(@PathVariable String username,
 							 @RequestBody CredentialsDto credentials) {
 		userService.unfollowUser(username, credentials);
+	}
+
+	@GetMapping("/@{username}/tweets")
+	public List<TweetResponseDto> getUserTweets(@PathVariable String username) {
+		return tweetService.getUserTweets(username);
 	}
 
 }
