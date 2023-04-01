@@ -1,24 +1,7 @@
 package com.cooksys.assessment1Team3.services.impl;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import com.cooksys.assessment1Team3.dtos.*;
 
-import org.springframework.stereotype.Service;
-
-import com.cooksys.assessment1Team3.dtos.ContextDto;
-import com.cooksys.assessment1Team3.dtos.CredentialsDto;
-import com.cooksys.assessment1Team3.dtos.HashtagDto;
-import com.cooksys.assessment1Team3.dtos.TweetRequestDto;
-import com.cooksys.assessment1Team3.dtos.TweetResponseDto;
-import com.cooksys.assessment1Team3.dtos.UserResponseDto;
 import com.cooksys.assessment1Team3.entities.Credentials;
 import com.cooksys.assessment1Team3.entities.Hashtag;
 import com.cooksys.assessment1Team3.entities.Tweet;
@@ -33,8 +16,15 @@ import com.cooksys.assessment1Team3.repositories.HashtagRepository;
 import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import com.cooksys.assessment1Team3.repositories.UserRepository;
 import com.cooksys.assessment1Team3.services.TweetService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -151,7 +141,6 @@ public class TweetServiceImpl implements TweetService {
 			throw new NotAuthorizedException("Incorrect username or password.");
 		}
 		tweet.setAuthor(user);
-//        tweet.setContent(usedTweet.getContent());
 		tweet.setPosted(new Timestamp(System.currentTimeMillis()));
 		tweet.setRepostOf(usedTweet);
 		tweetRepository.saveAndFlush(tweet);
@@ -237,6 +226,7 @@ public class TweetServiceImpl implements TweetService {
 	}
 	@Override
 	public ContextDto getTweetContextByTweetId(Long id) {
+
 		Tweet tweet = getTweet(id);
 		if (tweet.isDeleted() || tweet == null) {
 			throw new NotFoundException("Tweet with id " + id + " was not found in our database.");
@@ -254,8 +244,9 @@ public class TweetServiceImpl implements TweetService {
 		List<Tweet> activeAfterList = afterList.stream()
 				.filter(tweet1 -> ! tweet1.isDeleted())
 				.sorted(Comparator.comparing(Tweet::getPosted).reversed())
-				.collect(Collectors.toList());
-		
+				.collect(Collectors.toList());	
+
+
 		List<Tweet> beforeList = new ArrayList<>();
 
 		Tweet currentTweet = tweet.getInReplyTo();
@@ -273,6 +264,7 @@ public class TweetServiceImpl implements TweetService {
 		contextDto.setTarget(tweetMapper.entityToDto(tweet));
 		contextDto.setAfter(tweetMapper.entitiesToResponseDtos(activeAfterList));
 		contextDto.setBefore(tweetMapper.entitiesToResponseDtos(activeBeforeList));
+
 		return contextDto;
 	}
 

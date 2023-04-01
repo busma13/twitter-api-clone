@@ -1,23 +1,13 @@
 package com.cooksys.assessment1Team3.controllers;
 
 import com.cooksys.assessment1Team3.dtos.*;
-
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.cooksys.assessment1Team3.services.TweetService;
 import com.cooksys.assessment1Team3.services.UserService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/tweets")
@@ -74,24 +64,24 @@ public class TweetController {
         return tweetService.repostTweet(id, credentialsDto);
     }
 
-	@DeleteMapping("/{id}")
-	public TweetResponseDto deleteTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
-		return tweetService.deleteTweet(id, credentialsDto);
-	}
+    @DeleteMapping("/{id}")
+    public TweetResponseDto deleteTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
+        return tweetService.deleteTweet(id, credentialsDto);
+    }
 
-	@PostMapping("/{id}/reply")
-	public TweetResponseDto createReplyToTweet(@PathVariable Long id, @RequestBody TweetRequestDto tweetRequestDto) {
-		return tweetService.createReplyToTweet(id, tweetRequestDto);
-	}
-	
-	@GetMapping("/{id}/replies")
-	public List<TweetResponseDto> getRepliesToTweet(@PathVariable Long id) {
-	    return tweetService.getRepliesToTweet(id);
-	}
-	
-	@GetMapping("/{id}/reposts")
-	public List<TweetResponseDto> getRepostsOfTweet(@PathVariable Long id) {
-	    return tweetService.getRepostsOfTweet(id);
-	}
-	
+    @PostMapping("/{id}/reply")
+    public TweetResponseDto createReplyToTweet(@PathVariable Long id, @RequestBody TweetRequestDto tweetRequestDto) {
+        return tweetService.createReplyToTweet(id, tweetRequestDto);
+    }
+
+    @GetMapping("/{id}/replies")
+    public List<TweetResponseDto> getRepliesToTweet(@PathVariable Long id) {
+        return tweetService.getRepliesToTweet(id);
+    }
+
+    @GetMapping("/{id}/reposts")
+    public List<TweetResponseDto> getRepostsOfTweet(@PathVariable Long id) {
+        return tweetService.getRepostsOfTweet(id);
+    }
+
 }
