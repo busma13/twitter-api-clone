@@ -70,8 +70,8 @@ public class TweetController {
     }
 
     @PostMapping("/{id}/repost")
-    public TweetResponseDto repostTweet(@PathVariable Long id, @RequestBody TweetRequestDto tweetRequestDto) {
-        return tweetService.repostTweet(id, tweetRequestDto);
+    public TweetResponseDto repostTweet(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
+        return tweetService.repostTweet(id, credentialsDto);
     }
 
 	@DeleteMapping("/{id}")

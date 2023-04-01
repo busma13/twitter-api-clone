@@ -28,7 +28,7 @@ public interface TweetService {
 
 	TweetResponseDto getTweetContextByTweetId(Long id);
 
-	TweetResponseDto repostTweet(Long id, TweetRequestDto tweetRequestDto);
+	TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto);
 
 	TweetResponseDto deleteTweet(Long id, CredentialsDto credentialsDto);
 
@@ -37,5 +37,6 @@ public interface TweetService {
 	List<TweetResponseDto> getRepliesToTweet(Long id);
 
 	List<TweetResponseDto> getRepostsOfTweet(Long id);
+
 
 }

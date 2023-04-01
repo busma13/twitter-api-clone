@@ -15,7 +15,6 @@ import java.util.Optional;
 public class ValidateServiceImpl implements ValidateService {
 	private final UserRepository userRepository;
 	private final HashtagRepository hashtagRepository;
-	private final TweetRepository tweetRepository;
 
 	@Override
 	public boolean validateUserExists(String username) {
@@ -40,7 +39,6 @@ public class ValidateServiceImpl implements ValidateService {
 
 	@Override
 	public boolean validateTagExists(String label) {
-//		return hashtagRepository.findHashtagByLabelContaining("#" + label).isPresent();
-		return !tweetRepository.findByContentContainingAndDeletedFalse("#" + label).isEmpty();
+		return hashtagRepository.findHashtagByLabelContaining(label).isPresent();
 	}
 }
