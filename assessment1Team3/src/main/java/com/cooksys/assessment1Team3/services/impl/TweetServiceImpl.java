@@ -33,6 +33,19 @@ public class TweetServiceImpl implements TweetService {
     private final UserMapper userMapper;
     private final HashtagMapper hashtagMapper;
 
+    private void validateTweetRequest(TweetRequestDto tweetRequestDto) {
+        if (tweetRequestDto.getCredentials() == null ||
+                tweetRequestDto.getCredentials().getUsername() == null ||
+                tweetRequestDto.getCredentials().getUsername().isEmpty() ||
+                tweetRequestDto.getCredentials().getPassword() == null ||
+                tweetRequestDto.getCredentials().getPassword().isEmpty() ||
+                tweetRequestDto.getContent() == null ||
+                tweetRequestDto.getContent().isEmpty()
+        ) {
+            throw new BadRequestException("You must provide all of the required field to process this request!");
+        }
+    }
+
     @Override
     public List<TweetResponseDto> getAllTweets() {
 
@@ -45,6 +58,7 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public TweetResponseDto createTweet(TweetRequestDto tweetRequestDto) {
+        validateTweetRequest(tweetRequestDto);
         String username = tweetRequestDto.getCredentials().getUsername();
         Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
         if (optionalUser.isEmpty()) {

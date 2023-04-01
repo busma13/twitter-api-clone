@@ -1,6 +1,8 @@
 package com.cooksys.assessment1Team3.services.impl;
 
 import com.cooksys.assessment1Team3.entities.User;
+import com.cooksys.assessment1Team3.repositories.HashtagRepository;
+import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import com.cooksys.assessment1Team3.repositories.UserRepository;
 import com.cooksys.assessment1Team3.services.ValidateService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ValidateServiceImpl implements ValidateService {
 	private final UserRepository userRepository;
+	private final HashtagRepository hashtagRepository;
+	private final TweetRepository tweetRepository;
 
 	@Override
 	public boolean validateUserExists(String username) {
@@ -36,7 +40,7 @@ public class ValidateServiceImpl implements ValidateService {
 
 	@Override
 	public boolean validateTagExists(String label) {
-		// TODO Auto-generated method stub
-		return false;
+//		return hashtagRepository.findHashtagByLabelContaining("#" + label).isPresent();
+		return !tweetRepository.findByContentContainingAndDeletedFalse("#" + label).isEmpty();
 	}
 }

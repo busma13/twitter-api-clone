@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.cooksys.assessment1Team3.repositories.TweetRepository;
 import org.springframework.stereotype.Service;
 
 import com.cooksys.assessment1Team3.dtos.CredentialsDto;
@@ -40,14 +41,18 @@ public class UserServiceImpl implements UserService {
 	private final TweetService tweetService;
 	private final ValidateService validateService;
 	private final ProfileMapper profileMapper;
+	private final TweetRepository tweetRepository;
 
 	private void validateUserRequest(UserRequestDto userRequestDto) {
-		if (userRequestDto.getCredentials().getUsername() == null
-				|| userRequestDto.getCredentials().getPassword() == null
-				|| userRequestDto.getProfile().getFirstName() == null
-				|| userRequestDto.getProfile().getLastName() == null || userRequestDto.getProfile().getEmail() == null
-				|| userRequestDto.getProfile().getPhone() == null) {
-			throw new BadRequestException("You must provide all the required fileds for the request.");
+		if (userRequestDto.getCredentials() == null ||
+				userRequestDto.getProfile() == null ||
+				userRequestDto.getCredentials().getUsername() == null ||
+				userRequestDto.getCredentials().getPassword() == null ||
+				userRequestDto.getProfile().getFirstName() == null ||
+				userRequestDto.getProfile().getLastName() == null ||
+				userRequestDto.getProfile().getEmail() == null ||
+				userRequestDto.getProfile().getPhone() == null) {
+			throw new BadRequestException("You must provide all the required fields for the request.");
 		}
 	}
 
@@ -113,10 +118,20 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<TweetResponseDto> getMentions(String username) {
+//		User user = getUser(username);
+//
+//		List<Tweet> tweets = user.getMentionedTweets().stream().filter(tweet -> Objects.nonNull(tweet.getContent()))
+//				.sorted(Comparator.comparing(Tweet::getPosted).reversed()).collect(Collectors.toList());
+//
+//		return tweetMapper.entitiesToResponseDtos(tweets);
 		User user = getUser(username);
 
-		List<Tweet> tweets = user.getMentionedTweets().stream().filter(tweet -> Objects.nonNull(tweet.getContent()))
-				.sorted(Comparator.comparing(Tweet::getPosted).reversed()).collect(Collectors.toList());
+		List<Tweet> tweets =
+				tweetRepository
+						.findByContentContainingAndDeletedFalse("@" + user.getCredentials().getUsername()).stream()
+						.filter(tweet -> Objects.nonNull(tweet.getContent()))
+						.sorted(Comparator.comparing(Tweet::getPosted).reversed())
+						.collect(Collectors.toList());
 
 		return tweetMapper.entitiesToResponseDtos(tweets);
 	}
@@ -204,6 +219,30 @@ public class UserServiceImpl implements UserService {
 		followedList.add(follower);
 		followed.setFollowers(followedList);
 		userRepository.saveAndFlush(followed);
+	}
+
+	@Override
+	public void unfollowUser(String username, CredentialsDto credentials) {
+		if (!validateService.validateUserExists(username)) {
+			throw new NotFoundException("User with username of " + username + " not found.");
+		}
+
+		Optional<User> optionalUser = userRepository.findByCredentialsUsername(credentials.getUsername());
+		if (optionalUser.isEmpty() || !optionalUser.get().getCredentials().getPassword().equals(credentials.getPassword())) {
+			throw new NotAuthorizedException("Incorrect username or password.");
+		}
+
+		User followed = getUser(username);
+		User follower = optionalUser.get();
+		List<User> followingList = follower.getFollowing();
+
+		if (!followingList.contains(followed)) {
+			throw new BadRequestException("You can't unfollow user you don't subscribe!");
+		}
+
+		followingList.remove(followed);
+		follower.setFollowing(followingList);
+		userRepository.saveAndFlush(follower);
 	}
 
 }
