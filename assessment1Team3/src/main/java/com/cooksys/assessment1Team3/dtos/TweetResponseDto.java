@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -21,7 +20,5 @@ public class TweetResponseDto {
     private TweetResponseDto inReplyTo;
 
     private TweetRequestDto repostOf;
-
-    private List<UserResponseDto> mentionedUsers;
 
 }
