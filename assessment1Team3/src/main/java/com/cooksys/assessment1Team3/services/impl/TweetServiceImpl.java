@@ -211,19 +211,15 @@ public class TweetServiceImpl implements TweetService {
 	}
 
 	private List<Tweet> getRepliesRecursively(Tweet tweet) {
-		System.out.println("tweet id: " + tweet.getId());
 		List<Tweet> replies = tweet.getReplies();
-		System.out.println("replies size: " + replies.size());
 		List<Tweet> results = new ArrayList<>(replies);
 		
 		replies.forEach(t -> {
 			List<Tweet> temp = getRepliesRecursively(t);
 			if (temp != null) {
 				results.addAll(temp);
-				System.out.println("results size for tweet " + tweet.getId() + ": " + results.size());
 			}
 		});
-		System.out.println("results size before return: " + results.size());
 		return results;
 	}
 	@Override
@@ -236,12 +232,10 @@ public class TweetServiceImpl implements TweetService {
 		
 		List<Tweet> afterList = new ArrayList<>();
 		List<Tweet> currentReplies = tweet.getReplies();
-		System.out.println("currentReplies: " + currentReplies.size());
 		for (Tweet t : currentReplies) {
 			afterList.add(t);
 			List<Tweet> temp = getRepliesRecursively(t);
 			if (temp != null) {
-				System.out.println("temp size: " + temp.size());
 				afterList.addAll(temp);
 			}
 		}
