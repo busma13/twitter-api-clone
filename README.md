@@ -1,3 +1,11 @@
+
+This repository contains an implementation of a RESTful API using Spring Boot, JPA, and PostgreSQL. The API is designed to resemble the conceptual model of Twitter and provides various endpoints to interact with social media data.
+
+This project was built by [Jiwon Shim](https://github.com/jshim0209), [IchinnorovTuguldur](https://github.com/IchinnorovTuguldur), and [Peter Luitjens](https://github.com/busma13) as part of the [FastTrack](https://www.allaboutfasttrack.com/) full-stack software development training program by [Cook Systems](https://cooksys.com/).
+
+---
+The following are the assessment instructions:
+
 Assessment 1
 ===============================
 
